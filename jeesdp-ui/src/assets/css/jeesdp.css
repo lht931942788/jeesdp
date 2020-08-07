@@ -1,0 +1,59 @@
+html, body, .el-container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.content {
+    height: 100%;
+}
+
+.el-header {
+    padding: 0;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(239, 239, 239);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #bfbfbf;
+    border-radius: 10px;
+}
+
+.el-dialog__body {
+    height: 400px;
+    overflow: auto;
+}
+
+.el-aside::-webkit-scrollbar, .el-dialog__wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.user {
+    height: 60px;
+    float: right;
+}
+
+.el-menu {
+    border-right: none;
+    /*background-color: #001529;*/
+}
+
+.el-pagination {
+    border: 1px solid #EBEEF5;
+    border-top: none;
+    padding: 10px 0;
+    text-align: right;
+}
+
+.el-table__row > td > div.cell > label.el-checkbox {
+    padding-left: 3px;
+}

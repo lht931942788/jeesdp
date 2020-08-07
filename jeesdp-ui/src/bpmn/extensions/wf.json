@@ -1,0 +1,46 @@
+{
+  "name": "QualityAssurance",
+  "uri": "http://www.rookie.org.cn/schema/bpmn/wf",
+  "prefix": "wf",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "types": [
+    {
+      "name": "AnalyzedNode",
+      "extends": [
+        "bpmn:UserTask"
+      ],
+      "properties": [
+        {
+          "name": "userIds",
+          "isAttr": true,
+          "type": "string"
+        },
+        {
+          "name": "auditType",
+          "isAttr": true,
+          "type": "string"
+        },
+        {
+          "name": "expression",
+          "isAttr": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "SequenceFlowAttr",
+      "extends": [
+        "bpmn:SequenceFlow"
+      ],
+      "properties": [
+        {
+          "name": "expression",
+          "isAttr": true,
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}
