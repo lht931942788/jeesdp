@@ -24,7 +24,7 @@ public class JoinTableInterceptor implements Interceptor, ApplicationContextAwar
 
     private ApplicationContext applicationContext;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         Object result = invocation.proceed();

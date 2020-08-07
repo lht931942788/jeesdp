@@ -40,4 +40,6 @@ public class Table {
     public void setColumns(List<Column> columns) {
         this.columns = columns;
     }
+
+
 }

@@ -1,11 +1,29 @@
 <template>
-    <a-config-provider :csp="{Button: {size: 'samll'}}">
-        <a-button>My Button</a-button>
-    </a-config-provider>
+  <demo-sub-menu :menus="menus"></demo-sub-menu>
 </template>
 
 <script>
-    export default {
-        name: 'App',
+import DemoSubMenu from "@/components/DemoSubMenu";
+
+export default {
+  name: 'App',
+  components: {DemoSubMenu},
+  data() {
+    return {
+      menus: [{
+        id: '1',
+        name: 'demo',
+        icon: 'desktop',
+        children: [{
+          id: '2',
+          name: 'demo2',
+          children: [{
+            id: '3',
+            name: 'demo3',
+          }]
+        }]
+      }]
     }
+  }
+}
 </script>
