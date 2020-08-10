@@ -31,7 +31,8 @@ const Oauth = {
         }).then(token => {
             Cookie.set('access_token', token.access_token);
             router.push('/dashboard');
-        }).catch(() => {
+        }).catch((token) => {
+            console.log(token)
             Message.warning('用户名或密码错误');
         });
     },

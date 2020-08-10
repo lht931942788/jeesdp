@@ -38,7 +38,7 @@ public abstract class BaseController<T extends BaseEntity, E, M extends BaseServ
     public void afterPropertiesSet() {
         Type type = getClass().getGenericSuperclass();
         if (type instanceof ParameterizedType) {
-            model = ((Class<T>) ((ParameterizedType) type).getActualTypeArguments()[1]).getSimpleName();
+            model = ((Class<T>) ((ParameterizedType) type).getActualTypeArguments()[1]).getSimpleName().toLowerCase();
             baseService = applicationContext.getBean((Class<M>) ((ParameterizedType) type).getActualTypeArguments()[2]);
         }
     }

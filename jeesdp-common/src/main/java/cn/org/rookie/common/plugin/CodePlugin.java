@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
 public class CodePlugin implements ApplicationRunner, Interceptor {
 
     private static final Map<String, List<Object>> CODE_MAP = new HashMap<>();
