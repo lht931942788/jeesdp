@@ -4,6 +4,7 @@ package cn.org.rookie.common.base.entity;
 import cn.org.rookie.mapper.annotation.Column;
 import cn.org.rookie.mapper.annotation.Table;
 import cn.org.rookie.mapper.annotation.Transient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,7 @@ public class User extends BaseEntity implements UserDetails, Cloneable {
     private String username;
     private String name;
     private String password;
+    @JsonIgnore
     private String phone;
     private String email;
     private String userType;

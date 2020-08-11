@@ -1,6 +1,6 @@
 <template>
   <div>
-    <grid :fields="fields" :prop="prop" :model="model"></grid>
+    <grid :fields="fields" :prop="prop"></grid>
   </div>
 </template>
 <style>
@@ -19,43 +19,42 @@ export default {
     return {
       prop: {
         permission: {
-          add: 'system:workflow:add',
-          remove: 'system:workflow:remove',
-          edit: 'system:workflow:edit',
+          add: 'system:formlist:add',
+          remove: 'system:formlist:remove',
+          edit: 'system:formlist:edit',
         },
         url: {
-          save: 'workflow/save',
-          remove: 'workflow/removeByIds',
-          row: 'workflow/getById',
-          update: 'workflow/update',
-          data: 'workflow/listByPage',
+          save: 'form/save',
+          remove: 'form/removeByIds',
+          row: 'form/getById',
+          update: 'form/update',
+          data: 'form/listByPage',
         },
-      },
-      model: {
-        id: '',
-        name: '',
-        remark: '',
       },
       fields: [{
         selection: 'selection',
       }, {
+        name: '名称',
         prop: 'name',
         type: 'input',
         width: 100,
-        label: '名称',
+        search: true,
+        defaultValue: 2,
       }, {
+        name: '备注',
         prop: 'remark',
-        type: 'input',
-        label: '备注',
+        type: 'select',
+        dictable: true,
+        url: 'form/list'
       }, {
+        name: '状态',
         prop: 'status',
         type: 'input',
-        label: '状态',
       }, {
+        name: '操作',
+        width: 200,
         slot: 'op',
         edit: true,
-        width: 200,
-        label: '操作',
       }],
     }
   },

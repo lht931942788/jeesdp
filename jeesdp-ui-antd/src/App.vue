@@ -1,6 +1,6 @@
 <template>
-  <a-menu style="width: 256px" :default-selected-keys="['5']" :default-open-keys="['1','2']" mode="inline" theme="dark"
-          @click="menuClick">
+  <a-menu style="width: 256px" :default-selected-keys="['5']" :openKeys.sync="openKeys" mode="inline"
+          theme="dark" @click="menuClick" @openChange="openChange">
     <sub-menu v-for="menu in menus" :menu="menu"></sub-menu>
   </a-menu>
 </template>
@@ -13,6 +13,7 @@ export default {
   components: {SubMenu},
   data() {
     return {
+      openKeys: ['2'],
       menus: [{
         id: '1',
         name: 'demo',
@@ -60,6 +61,9 @@ export default {
   }, methods: {
     menuClick(node) {
       console.log(node)
+    },
+    openChange(openKeys) {
+      console.log(openKeys)
     }
   }
 }

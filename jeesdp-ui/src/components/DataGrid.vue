@@ -3,18 +3,26 @@
     <el-table :data="data" :height="height" :row-key="table.rowKey" @selection-change="selectionChange" border
               tooltip-effect="dark">
       <template v-for="field in table.fields">
-        <el-table-column v-if="field.selection" :type="field.selection" align="center" fixed="left" header-align="center"
-                         width="40">
+        <el-table-column v-if="field.selection" :type="field.selection" align="center" fixed="left"
+                         header-align="center" width="40">
         </el-table-column>
-        <el-table-column :align="field.align?'center':field.align" :fixed="field.fixed"
-                         :header-align="field.headerAlign?'center':field.headerAlign"
-                         :label="field.label" :prop="field.prop" :show-overflow-tooltip="true"
-                         :width="field.width" v-else-if="field.slot === undefined">
+        <el-table-column v-else-if="field.dictable" :align="field.align ? 'center':field.align"
+                         :fixed="field.fixed" :header-align="field.headerAlign ? 'center' : field.headerAlign"
+                         :label="field.name" :prop="field.prop" :show-overflow-tooltip="true"
+                         :width="field.width">
+          <template slot-scope="scope">
+            {{ dict[field.prop].get(scope.row[field.prop]) }}
+          </template>
         </el-table-column>
-        <el-table-column :align="field.align?'center':field.align" :fixed="field.fixed"
-                         :header-align="field.headerAlign?'center':field.headerAlign"
-                         :label="field.label" :prop="field.prop" :show-overflow-tooltip="true"
-                         :width="field.width" v-else>
+        <el-table-column v-else-if="field.slot === undefined" :align="field.align ? 'center':field.align"
+                         :fixed="field.fixed" :header-align="field.headerAlign ? 'center' : field.headerAlign"
+                         :label="field.name" :prop="field.prop" :show-overflow-tooltip="true"
+                         :width="field.width">
+        </el-table-column>
+        <el-table-column v-else :align="field.align ? 'center':field.align" :fixed="field.fixed"
+                         :header-align="field.headerAlign ? 'center':field.headerAlign"
+                         :label="field.name" :prop="field.prop" :show-overflow-tooltip="true"
+                         :width="field.width">
           <slot :field="field" :name="field.slot" :row="scope.row" slot-scope="scope"></slot>
         </el-table-column>
       </template>
@@ -46,6 +54,9 @@ export default {
     },
     height: {
       type: Number
+    },
+    dict: {
+      type: Object
     }
   },
   data() {
@@ -72,7 +83,7 @@ export default {
     },
   },
   created() {
-    console.log(this.table)
+    console.log(this.dict)
   }
 }
 </script>
