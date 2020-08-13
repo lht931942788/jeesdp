@@ -215,7 +215,7 @@ export default {
     }
   },
   created() {
-    this.fields.forEach((field, index) => {
+    for (let field of this.fields) {
       if (field.search) {
         this.search.fields.push(field);
       }
@@ -245,13 +245,16 @@ export default {
       if (!field.tableHide) {
         this.table.fields.push(field);
       }
-    })
+    }
     if (this.prop.rowKey) {
       this.table.rowKey = this.prop.rowKey;
       this.$set(this.model, this.prop.rowKey, null);
     } else {
       this.table.rowKey = 'id';
       this.$set(this.model, 'id', null);
+    }
+    if (this.prop.labelWidth === undefined) {
+      this.form.labelWidth = '80px';
     }
     this.load();
   },
