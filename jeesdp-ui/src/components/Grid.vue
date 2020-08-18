@@ -136,7 +136,7 @@ export default {
           this.loading = true;
           let url = this.prop.url.update;
           console.log(this.model[this.table.rowKey])
-          if (this.model[this.table.rowKey] || this.model[this.table.rowKey] === '' || this.model[this.table.rowKey] === null) {
+          if (!this.model[this.table.rowKey] || this.model[this.table.rowKey] === '' || this.model[this.table.rowKey] === null) {
             url = this.prop.url.save;
             alert(1)
           }

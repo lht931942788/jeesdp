@@ -118,7 +118,7 @@ export default {
           {min: 11, max: 11, message: '请输入正确手机号'}
         ],
         email: [
-          {required: true, message: '请输入姓名'},
+          {required: true, message: '请输入邮箱'},
           {type: 'email', message: '邮箱格式错误'}
         ],
         userType: [
