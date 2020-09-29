@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve",
+    "start element": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "update": "npm install"
   },
@@ -23,7 +23,10 @@
     "diagram-js": "^6.6.1",
     "diagram-js-direct-editing": "^1.6.1",
     "bpmn-js": "^7.2.0",
-    "vue-drag-drop": "^1.1.4"
+    "vue-drag-drop": "^1.1.4",
+    "monaco-editor": "^0.20.0",
+    "monaco-editor-webpack-plugin": "^1.9.0",
+    "ant-design-vue": "^2.0.0-beta.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-router": "^4.4.6",

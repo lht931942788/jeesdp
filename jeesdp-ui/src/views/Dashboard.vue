@@ -1,69 +1,27 @@
 <template>
-  <div>
-    <grid :fields="fields" :prop="prop"></grid>
-  </div>
+  <div ref="container" style="height: 360px;width: 100%;"></div>
 </template>
-<style>
-.el-tag {
-  margin-top: 4px;
-}
-</style>
+
 <script>
-import Grid from "../components/Grid";
+import * as monaco from 'monaco-editor';
+import 'monaco-editor/esm/vs/basic-languages/java/java.contribution'
 
 export default {
-  components: {
-    Grid,
-  },
   data() {
     return {
-      prop: {
-        permission: {
-          add: 'system:formlist:add',
-          remove: 'system:formlist:remove',
-          edit: 'system:formlist:edit',
-        },
-        url: {
-          save: 'form/save',
-          remove: 'form/removeByIds',
-          row: 'form/getById',
-          update: 'form/update',
-          data: 'form/listByPage',
-        },
-      },
-      fields: [{
-        selection: 'selection',
-      }, {
-        name: '名称',
-        prop: 'name',
-        type: 'input',
-        width: 100,
-        search: true,
-        defaultValue: 2,
-      }, {
-        name: '备注',
-        prop: 'remark',
-        type: 'select',
-        dictable: true,
-        url: 'form/list'
-      }, {
-        name: '状态',
-        prop: 'status',
-        type: 'input',
-      }, {
-        name: '操作',
-        width: 200,
-        slot: 'op',
-        edit: true,
-      }],
+      monacoEditor: {}
     }
   },
-  methods: {
-    demo() {
-      console.log(this.value)
-    },
-  }
-};
-
-
+  mounted: function () {
+    // 初始化编辑器，确保dom已经渲染，dialog中要写在opened中
+    this.monacoEditor = monaco.editor.create(this.$refs.container, {
+      value: null,
+      language: "java",
+      minimap: {
+        enabled: false
+      },
+    });
+  },
+  methods: {}
+}
 </script>
