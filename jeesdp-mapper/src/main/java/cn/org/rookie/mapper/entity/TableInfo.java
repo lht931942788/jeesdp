@@ -20,7 +20,7 @@ public class TableInfo {
     public TableInfo(Class<?> type) {
         Table table = type.getAnnotation(Table.class);
         if (table != null) {
-            tableName = StringUtils.camelCaseToUnderscore(table.value());
+            tableName = StringUtils.humpToUnderscore(table.value());
         } else {
             tableName = type.getSimpleName();
         }

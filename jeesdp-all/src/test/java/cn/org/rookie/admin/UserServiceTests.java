@@ -8,12 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,8 +19,6 @@ public class UserServiceTests {
 
     @Autowired
     UserService userService;
-    @Autowired
-    JavaMailSender javaMailSender;
     @Autowired
     Demo demo;
     @Autowired
@@ -40,17 +34,6 @@ public class UserServiceTests {
             e.printStackTrace();
         }
         System.out.println(admin.getUserType());
-    }
-
-    @Test
-    public void testMail() throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom("931942788@qq.com");
-        helper.setTo("931942788@qq.com");
-        helper.setSubject("11111");
-        helper.setText("<html><body>带静态资源的邮件内容，这个一张IDEA配置的照片</body></html>", true);
-        javaMailSender.send(message);
     }
 
     @Test

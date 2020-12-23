@@ -24,7 +24,7 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version>
@@ -40,17 +40,18 @@
                             <arguments>
                                 <argument>run</argument>
                                 <argument>build</argument>
-                                <argument>--prefix</argument>
+                                <argument>&#45;&#45;prefix</argument>
                                 <argument>../jeesdp-ui</argument>
                             </arguments>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <!-- 拷贝依赖jar -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
                 <executions>
                     <execution>
                         <id>copy</id>
@@ -70,6 +71,7 @@
                 <!-- 配置要生成的jar -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
                 <configuration>
                     <!-- 配置jar包文件名称，自动生成后缀 -->
                     <finalName>jeesdp</finalName>
@@ -89,29 +91,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
                 <configuration>
                     <finalName>jeesdp-${project.version}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>assembly/package.xml</descriptor>
-                    </descriptors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase> <!--this is used for inheritance merges  绑定到这个生命周期-->
-                        <goals>
-                            <goal>single</goal> <!--执行一次-->
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
                     <descriptors>
                         <descriptor>assembly/package.xml</descriptor>
                     </descriptors>
