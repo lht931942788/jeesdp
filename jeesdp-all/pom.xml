@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.org.rookie</groupId>
-            <artifactId>jeesdp-admin-web</artifactId>
+            <artifactId>jeesdp-core</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -80,7 +80,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>./libs</classpathPrefix>
-                            <mainClass>cn.org.rookie.JeesdpApplication</mainClass>
+                            <mainClass>cn.org.rookie.jeesdp.JeesdpApplication</mainClass>
                         </manifest>
                     </archive>
                     <outputDirectory>
