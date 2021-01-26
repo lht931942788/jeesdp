@@ -1,97 +1,120 @@
 <template>
-  <div>
-    <el-table :data="data" :height="height" :row-key="table.rowKey" @selection-change="selectionChange" border
-              tooltip-effect="dark">
-      <template v-for="field in table.fields">
-        <el-table-column v-if="field.selection" :type="field.selection" align="center" fixed="left"
-                         header-align="center" width="40">
-        </el-table-column>
-        <el-table-column v-else-if="field.dictable" :align="field.align ? 'center':field.align"
-                         :fixed="field.fixed" :header-align="field.headerAlign ? 'center' : field.headerAlign"
-                         :label="field.name" :prop="field.prop" :show-overflow-tooltip="true"
-                         :width="field.width">
-          <template slot-scope="scope">
-            {{ dict[field.prop].get(scope.row[field.prop]) }}
+  <el-row class="data-grid">
+    <el-col :span="24">
+      <el-table v-loading="loading" :data="data" :height="height" :row-key="rowKey"
+                border element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中" tooltip-effect="dark"
+                @selection-change="selectionChange">
+
+        <el-table-column v-if="selection" align="center" header-align="center" type="selection"/>
+
+        <template v-for="field in fields">
+          <template v-if="field.fieldType !== 'hidden'">
+
+            <el-table-column :align="field.align" :fixed="field.right" :formatter="field.formatter"
+                             :header-align="field.headerAlign ? field.headerAlign : 'center'"
+                             :label="field.label" :min-width="120" :prop="field.prop"
+                             :show-overflow-tooltip="true"
+                             :width="field.width">
+
+              <template v-if="'timePicker,datePicker'.indexOf(field.fieldType) > -1" #default="scope">
+                {{ $dayjs(scope.row[field.prop]).format(field.format) }}
+              </template>
+
+              <template v-else-if="'select,radio,checkbox'.indexOf(field.fieldType) > -1" #default="scope">
+                {{ dictionaries[field.dictionary ? field.dictionary : field.prop][scope.row[field.prop]] }}
+              </template>
+              <template v-else-if="field.buttons" #default="scope">
+                <el-button-group>
+                  <el-button v-for="button in field.buttons" :icon="button.icon" :type="button.type"
+                             @click="eval(button.click)">
+                    {{ button.name }}
+                  </el-button>
+                </el-button-group>
+              </template>
+
+              <template v-else-if="field.slot === 'dict'" #default="scope">
+                <slot :field="field" :name="field.slot" :row="scope.row"/>
+              </template>
+
+            </el-table-column>
+
           </template>
-        </el-table-column>
-        <el-table-column v-else-if="field.slot === undefined" :align="field.align ? 'center':field.align"
-                         :fixed="field.fixed" :header-align="field.headerAlign ? 'center' : field.headerAlign"
-                         :label="field.name" :prop="field.prop" :show-overflow-tooltip="true"
-                         :width="field.width">
-        </el-table-column>
-        <el-table-column v-else :align="field.align ? 'center':field.align" :fixed="field.fixed"
-                         :header-align="field.headerAlign ? 'center':field.headerAlign"
-                         :label="field.name" :prop="field.prop" :show-overflow-tooltip="true"
-                         :width="field.width">
-          <slot :field="field" :name="field.slot" :row="scope.row" slot-scope="scope"></slot>
-        </el-table-column>
-      </template>
-    </el-table>
-    <el-pagination v-if="pageable" @size-change="page.sizeChange" @current-change="page.currentChange"
-                   :page-sizes="[10, 20, 30, 40, 50, 100]" layout="jumper,prev,pager,next,sizes,total"
-                   :current-page="page.pageNum" :page-size="page.pageSize" :total="page.total">
-    </el-pagination>
-  </div>
+        </template>
+
+      </el-table>
+
+      <el-pagination v-if="pageable" :current-page="page.pageNum" :page-size="page.pageSize"
+                     :page-sizes="[10, 20, 30, 40, 50, 100]" :total="page.total"
+                     layout="jumper, prev, pager, next, sizes, total"
+                     @size-change="page.sizeChange" @current-change="page.currentChange"/>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
+
 export default {
   name: "DataGrid",
   props: {
-    table: {
-      type: Object,
+    fields: {
+      type: Array,
+      required: true,
+    },
+    data: {
+      type: Array,
       required: true,
     },
     pageable: {
       type: Boolean,
-      default: true,
+      default: true
     },
     page: {
-      type: Object,
-    },
-    data: {
-      type: Array
+      type: Object
     },
     height: {
       type: Number
     },
-    dict: {
+    dictionaries: {
       type: Object
-    }
+    },
+    rowKey: {
+      type: String,
+      default: 'id'
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
   },
   data() {
     return {
-      selected: [],
+      selection: [],
     }
   },
   methods: {
-    selectionChange(selection) {
-      let ids = [];
-      for (let selected of selection) {
-        ids.push(selected[this.table.rowKey]);
-      }
-      this.selected = ids;
-    },
-    currentChange(current) {
-      this.$emit('currentChange', current);
-    },
-    sizeChange(size) {
-      this.$emit('sizeChange', size);
-    },
     getSelected() {
       return this.selected;
     },
+    getSelectedIds() {
+      return this.selection.map(row => {
+        return row[this.rowKey];
+      });
+    },
+    selectionChange(selection) {
+      this.selection = selection;
+    },
   },
-  created() {
-    console.log(this.dict)
-  }
 }
 </script>
 
 <style scoped>
+
 .el-pagination {
   border: 1px solid #EBEEF5;
   border-top: none;
+  padding-top: 10px;
   padding-bottom: 10px;
+  text-align: right;
 }
+
 </style>
