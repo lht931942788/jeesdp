@@ -1,12 +1,14 @@
 import axios from 'axios';
 import Qs from "qs";
+import dayjs from "dayjs";
+import DataGrid from "./DataGrid.vue";
+import FieldRender from "./FieldRender.vue";
 
 const instance = axios.create();
 
-
 instance.defaults.timeout = 30000;
 instance.defaults.withCredentials = true;
-instance.defaults.baseURL = 'http://localhost:8080';
+instance.defaults.baseURL = host;
 instance.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 instance.defaults.transformRequest = [(data, headers) => {
     if (headers['Content-Type'].indexOf("application/x-www-form-urlencoded") > -1) {
@@ -44,4 +46,21 @@ instance.interceptors.response.use(response => {
     }
 });
 
-export default instance;
+export default {
+    install: (app, options) => {
+        app.config.globalProperties.$axios = instance;
+        app.config.globalProperties.$dayjs = dayjs;
+        app.component(DataGrid.name, DataGrid);
+        app.component(FieldRender.name, FieldRender);
+        app.config.globalProperties.user = {};
+        app.config.globalProperties.clone = (source, target) => {
+            target = target || {};
+            for (let i in source) {
+                if (source.hasOwnProperty(i)) {
+                    target[i] = source[i];
+                }
+            }
+            return target;
+        }
+    }
+}

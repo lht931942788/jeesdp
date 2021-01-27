@@ -9,17 +9,17 @@
   },
   "dependencies": {
     "vue": "^3.0.5",
-    "vue-router": "^3.4.9",
+    "vue-router": "^4.0.3",
     "element-plus": "^1.0.2-beta.30",
-    "dayjs": "^1.10.2",
+    "js-cookie": "^2.2.1",
+    "dayjs": "^1.10.4",
     "axios": "^0.21.1",
-    "qs": "^6.9.4",
-    "js-cookie": "^2.2.1"
+    "qs": "^6.9.4"
   },
   "devDependencies": {
-    "vite": "^2.0.0-beta.31",
-    "@vue/compiler-sfc": "^3.0.5",
-    "@vitejs/plugin-vue": "^1.0.6",
-    "@vitejs/plugin-vue-jsx": "^1.0.2"
+    "vite": "^2.0.0-beta.49",
+    "@vitejs/plugin-vue": "^1.1.2",
+    "@vitejs/plugin-vue-jsx": "^1.0.2",
+    "@vue/compiler-sfc": "^3.0.5"
   }
 }

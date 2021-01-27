@@ -1,18 +1,14 @@
 <template>
-  <router-view/>
+  login
 </template>
-
 <script>
-
 export default {
-  name: 'App',
+  name: 'Login',
   data() {
-    return {
-      test: 'demo'
-    }
+    return {}
   },
-  methods: {},
   created() {
+    console.log(this.xxx)
   }
 }
 </script>

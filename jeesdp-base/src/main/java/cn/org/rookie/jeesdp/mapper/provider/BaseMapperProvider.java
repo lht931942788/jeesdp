@@ -4,7 +4,6 @@ import cn.org.rookie.jeesdp.mapper.sql.where.Wrapper;
 import cn.org.rookie.jeesdp.mapper.utils.SqlBuilderContext;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 
-@SuppressWarnings("unused")
 public class BaseMapperProvider {
 
     public String insert(ProviderContext context) {

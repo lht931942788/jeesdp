@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import jsCookie from "js-cookie";
-import Oauth from "./utils/oauth";
-import {loadPermissions, toTree} from "./utils/utils";
 
 Vue.use(VueRouter);
 
@@ -16,7 +14,7 @@ const router = new VueRouter({
     //mode:'history',
     routes: [{
         path: '/login',
-        component: () => import('./views/Login.vue')
+        component: () => import('/@/views/Login.vue')
     }]
 });
 
@@ -36,7 +34,7 @@ router.beforeEach((to, from, next) => {
             next({path: '/login'});
         }
     } else {
-        if (Vue.prototype.$user === undefined) {
+        /*if (Vue.prototype.$user === undefined) {
             Oauth.loadUser().then(user => {
                 user.resources = toTree(user.resources);
                 let permissions = [];
@@ -49,29 +47,10 @@ router.beforeEach((to, from, next) => {
             });
         } else {
             next();
-        }
+        }*/
+        next();
     }
 });
 
-function loadRoutes(routes, resources) {
-    if (resources != null) {
-        for (let i = 0; i < resources.length; i++) {
-            let route;
-            if (resources[i].type !== '2' && resources[i].path != null && resources[i].path !== '') {
-                route = {
-                    name: resources[i].code,
-                    path: resources[i].url,
-                    component: () => import('./views/' + resources[i].path + '.vue'),
-                    children: []
-                };
-                if (resources[i].children) {
-                    loadRoutes(route.children, resources[i].children)
-                }
-                routes.push(route);
-            }
-        }
-    }
-    return routes;
-}
 
 export default router;
