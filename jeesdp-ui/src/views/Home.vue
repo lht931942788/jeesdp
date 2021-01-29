@@ -1,72 +1,105 @@
 <template>
-  <el-container>
-    <el-header>Header</el-header>
-    <el-container>
-      <el-aside style="overflow: hidden" width="200px">
-        <el-menu :uniqueOpened="true" active-text-color="#ffd04b" background-color="#545c64" default-active="2"
-                 text-color="#fff">
-          <el-submenu index="1">
-            <template #title>
-              <i class="el-icon-location"></i>
-              <span>导航一</span>
-            </template>
-            <el-menu-item-group>
-              <template #title>分组一</template>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="1-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-              <template #title>选项4</template>
-              <el-menu-item index="1-4-1">选项1</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-menu-item index="2">
-            <i class="el-icon-menu"></i>
-            <template #title>导航二</template>
-          </el-menu-item>
-          <el-menu-item disabled index="3">
-            <i class="el-icon-document"></i>
-            <template #title>导航三</template>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <i class="el-icon-setting"></i>
-            <template #title>导航四</template>
-          </el-menu-item>
-          <el-submenu index="5">
-            <template #title>
-              <i class="el-icon-location"></i>
-              <span>导航一</span>
-            </template>
-            <el-menu-item-group>
-              <template #title>分组一</template>
-              <el-menu-item index="5-1">选项1</el-menu-item>
-              <el-menu-item index="5-2">选项2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="5-3">选项3</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-        </el-menu>
-      </el-aside>
-      <el-container>
-        <el-main>
-          <router-view/>
-        </el-main>
-        <el-footer>Footer</el-footer>
-      </el-container>
-    </el-container>
-  </el-container>
+  <common-grid ref="grid" :dictionaries="dictionaries" :fields="fields"/>
+  <div id="editor"></div>
 </template>
-
 <script>
+
 export default {
-  name: "Home"
+  name: 'Home',
+  data() {
+    return {
+      active: 1,
+      dictionaries: {
+        demo: {
+          demo: "aa",
+          test: "bb",
+          2: "bbssssssssssssssssssssssssssssss",
+          3: "bbssssssssssssssssssssssssssssss",
+          5: "bbssssssssssssssssssssssssssssss",
+          6: "bbssssssssssssssssssssssssssssss",
+          9: "bbssssssssssssssssssssssssssssss",
+          8: "bbssssssssssssssssssssssssssssss",
+          10: "bbssssssssssssssssssssssssssssss"
+        }
+      },
+      model: {},
+      visible: true,
+      fields: [{
+        fieldType: 'radio',
+        type: 'password',
+        prop: 'demo',
+        label: '测试',
+        slot: 'demo'
+      }, {
+        fieldType: 'datePicker',
+        type: 'datetime',
+        prop: 'time',
+        label: '时间',
+        format: 'YYYY-MM-DD HH:mm:ss',
+        searchable: true
+      }, {
+        prop: 'op',
+        label: '操作',
+        slot: 'op'
+      }],
+      demo: [
+        {
+          id: '1',
+          demo: "demo",
+          time: '2020-11-11 00:00:00'
+        }, {
+          id: '2',
+          demo: "test",
+          time: '2020-11-11 00:00:00'
+        }
+      ],
+    }
+  },
+  methods: {
+    onClick(row) {
+      console.log(row)
+    },
+    click() {
+      this.xxx = "llll"
+      console.log(this.$refs.datagrid.getSelectedIds())
+      this.$axios.post('/demo', this.model).then((res) => {
+        console.log(res)
+      });
+    },
+    next() {
+      if (this.active++ > 2) this.active = 0;
+    }
+  },
+  mounted() {
+    /*ClassicEditor.create(document.querySelector('#editor'), {
+      initialData: '<h2>Initial data</h2><p>Foo bar.</p>',
+      language: 'zh-cn',
+    }).then(editor => {
+      console.log(editor);
+      //console.log(Array.from(editor.ui.componentFactory.names()))
+    }).catch(error => {
+      console.error(error);
+    });*/
+    //this.$refs.grid.setData(this.demo);
+  },
+  created() {
+    console.log(this.user.username)
+    this.user.username = 222
+  }
+}
+
+function copy(source, target) {
+  for (let key in source) {
+    if (source.hasOwnProperty(key)) {
+      target[key] = source[key];
+    }
+  }
+  return target;
 }
 </script>
 
 <style scoped>
-
+.ck-content {
+  height: 600px !important;
+}
 </style>

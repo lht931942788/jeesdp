@@ -9,10 +9,10 @@
     <name>jeesdp</name>
 
     <modules>
-        <module>jeesdp-utils</module>
         <module>jeesdp-core</module>
-        <module>jeesdp-base</module>
-        <module>jeesdp-web</module>
+        <module>jeesdp-mapper</module>
+        <module>jeesdp-common-base</module>
+        <module>jeesdp-common-web</module>
         <module>jeesdp-workflow</module>
         <module>jeesdp-all</module>
         <module>script</module>
@@ -126,9 +126,6 @@
             <id>aliyun</id>
             <name>aliyun nexus</name>
             <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
         </repository>
     </repositories>
     <pluginRepositories>
@@ -141,9 +138,6 @@
             <id>aliyun</id>
             <name>aliyun nexus</name>
             <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
         </pluginRepository>
     </pluginRepositories>
 </project>

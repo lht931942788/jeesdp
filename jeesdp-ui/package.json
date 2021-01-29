@@ -1,6 +1,9 @@
 {
   "name": "jeesdp-plus",
   "description": "demo",
+  "repository": {
+    "url": ""
+  },
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -10,7 +13,9 @@
   "dependencies": {
     "vue": "^3.0.5",
     "vue-router": "^4.0.3",
+    "vue-i18n": "^9.0.0-rc.4",
     "element-plus": "^1.0.2-beta.30",
+    "echarts": "^5.0.1",
     "js-cookie": "^2.2.1",
     "dayjs": "^1.10.4",
     "axios": "^0.21.1",

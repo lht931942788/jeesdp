@@ -2,14 +2,16 @@ package cn.org.rookie.jeesdp.component;
 
 import cn.org.rookie.jeesdp.annotation.Column;
 import cn.org.rookie.jeesdp.annotation.Table;
-import cn.org.rookie.jeesdp.component.entity.ColumnInfo;
-import cn.org.rookie.jeesdp.component.entity.TableInfo;
+import cn.org.rookie.jeesdp.entity.ColumnInfo;
+import cn.org.rookie.jeesdp.entity.TableInfo;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Entity {
 
@@ -20,55 +22,7 @@ public class Entity {
     private String flag;
     private List<String> where;
 
-    public Entity(Class<?> entity) {
-        this.entity = entity;
-        tableInfo = new TableInfo();
-        Table table = entity.getAnnotation(Table.class);
-        String tableName = table.value();
-        if (tableName.isEmpty()) {
-            tableName = StringUtils.humpToUnderline(entity.getSimpleName());
-        }
-        tableInfo.setName(tableName);
-
-        List<String> fields = new ArrayList<>();
-        List<String> columns = new ArrayList<>();
-        List<String> selectColumns = new ArrayList<>();
-        List<String> updateColumns = new ArrayList<>();
-
-        Field[] entityFields = entity.getDeclaredFields();
-        for (Field field : entityFields) {
-            if (!":$staticClassInfo,:__$stMC,:metaClass,:$callSiteArray".contains(field.getName())) {
-                ColumnInfo columnInfo = new ColumnInfo();
-                String name = field.getName();
-                columnInfo.setName(name);
-
-                Column column = field.getAnnotation(Column.class);
-                String columnName;
-                if (column == null) {
-                    columnName = StringUtils.humpToUnderline(name);
-                    updateColumns.add(tableName + "." + columnName + " = " + ":" + name);
-                } else {
-                    columnName = column.value();
-                    if (columnName.isEmpty()) {
-                        columnName = StringUtils.humpToUnderline(name);
-                    }
-                    if (column.primary()) {
-                        tableInfo.setPrimary(columnInfo);
-                    } else {
-                        updateColumns.add(tableName + "." + columnName + " = " + ":" + name);
-                    }
-                }
-                columnInfo.setColumnName(columnName);
-                fields.add(":" + name);
-                columns.add(tableName + "." + columnName);
-                selectColumns.add(tableName + "." + columnName + " AS " + "\"" + name + "\"");
-            }
-        }
-        sql.put("insert", String.format("INSERT INTO %s (%s) VALUE (%s)", tableName, String.join(", ", columns), String.join(", ", fields)));
-        sql.put("delete", String.format("DELETE FROM %s", tableName));
-        sql.put("update", String.format("UPDATE %s SET %s", tableName, String.join(", ", updateColumns)));
-        sql.put("select", String.format("SELECT %s FROM %s", String.join(", ", selectColumns), tableName));
-    }
+    public static final Pattern humpPattern = Pattern.compile("[A-Z]");
 
     public Entity insert() {
         where = new ArrayList<>();
@@ -123,5 +77,64 @@ public class Entity {
         return sql;
     }
 
+    public Entity(Class<?> entity) {
+        this.entity = entity;
+        tableInfo = new TableInfo();
+        Table table = entity.getAnnotation(Table.class);
+        String tableName = table.value();
+        if (tableName.isEmpty()) {
+            tableName = humpToUnderline(entity.getSimpleName());
+        }
+        tableInfo.setName(tableName);
+
+        List<String> fields = new ArrayList<>();
+        List<String> columns = new ArrayList<>();
+        List<String> selectColumns = new ArrayList<>();
+        List<String> updateColumns = new ArrayList<>();
+
+        Field[] entityFields = entity.getDeclaredFields();
+        for (Field field : entityFields) {
+            if (!":$staticClassInfo,:__$stMC,:metaClass,:$callSiteArray".contains(field.getName())) {
+                ColumnInfo columnInfo = new ColumnInfo();
+                String name = field.getName();
+                columnInfo.setName(name);
+
+                Column column = field.getAnnotation(Column.class);
+                String columnName;
+                if (column == null) {
+                    columnName = humpToUnderline(name);
+                    updateColumns.add(tableName + "." + columnName + " = " + ":" + name);
+                } else {
+                    columnName = column.value();
+                    if (columnName.isEmpty()) {
+                        columnName = humpToUnderline(name);
+                    }
+                    if (column.primary()) {
+                        tableInfo.setPrimary(columnInfo);
+                    } else {
+                        updateColumns.add(tableName + "." + columnName + " = " + ":" + name);
+                    }
+                }
+                columnInfo.setColumnName(columnName);
+                fields.add(":" + name);
+                columns.add(tableName + "." + columnName);
+                selectColumns.add(tableName + "." + columnName + " AS " + "\"" + name + "\"");
+            }
+        }
+        sql.put("insert", String.format("INSERT INTO %s (%s) VALUE (%s)", tableName, String.join(", ", columns), String.join(", ", fields)));
+        sql.put("delete", String.format("DELETE FROM %s", tableName));
+        sql.put("update", String.format("UPDATE %s SET %s", tableName, String.join(", ", updateColumns)));
+        sql.put("select", String.format("SELECT %s FROM %s", String.join(", ", selectColumns), tableName));
+    }
+
+    private static String humpToUnderline(String str) {
+        Matcher matcher = humpPattern.matcher(str);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
 
 }
