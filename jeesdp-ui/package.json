@@ -8,23 +8,27 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "vue": "^3.0.5",
-    "vue-router": "^4.0.3",
-    "vue-i18n": "^9.0.0-rc.4",
-    "element-plus": "^1.0.2-beta.30",
-    "echarts": "^5.0.1",
+    "vue-router": "^4.0.4",
+    "vue-i18n": "^9.0.0-rc.8",
+    "element-plus": "^1.0.2-beta.32",
+    "echarts": "^5.0.2",
     "js-cookie": "^2.2.1",
     "dayjs": "^1.10.4",
     "axios": "^0.21.1",
-    "qs": "^6.9.4"
+    "qs": "^6.9.4",
+    "jsoneditor": "^9.1.10",
+    "monaco-editor": "^0.22.3",
+    "wangeditor": "^4.6.6"
   },
   "devDependencies": {
-    "vite": "^2.0.0-beta.49",
-    "@vitejs/plugin-vue": "^1.1.2",
-    "@vitejs/plugin-vue-jsx": "^1.0.2",
+    "vite": "^2.0.2",
+    "@vitejs/plugin-vue": "^1.1.4",
+    "@vitejs/plugin-vue-jsx": "^1.1.0",
     "@vue/compiler-sfc": "^3.0.5"
   }
 }

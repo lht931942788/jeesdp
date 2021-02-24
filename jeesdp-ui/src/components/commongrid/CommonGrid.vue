@@ -1,46 +1,41 @@
 <template>
   <el-container>
-    <el-aside v-if="treeable">
-      <el-tree :data="treeData" :props="{children: 'children', label: 'label'}"/>
-    </el-aside>
-    <el-container>
-      <el-header style="height: auto">
-        <el-row>
-          <el-col v-if="searchable" :span="24">
-            <el-form ref="search" :model="params" inline label-position="right" label-width="120px">
-              <template v-for="field in fields">
-                <form-item v-if="field.searchable" v-model:value="params[field.prop]"
-                           :field="field" :options="dictionaries[field.dictionary ? field.dictionary : field.prop]"/>
-              </template>
-              <slot name="search"></slot>
-              <el-form-item>
-                <el-button-group>
-                  <el-button :title="'查询'" type="primary" @click="load">查 询</el-button>
-                  <el-button :title="'清空'" type="primary" @click="clear">清 空</el-button>
-                </el-button-group>
-              </el-form-item>
-            </el-form>
-          </el-col>
+    <el-header style="height: auto">
+      <el-row>
+        <el-form v-if="searchable" ref="search" v-model="params" inline label-position="right">
           <el-col :span="24">
-            <el-button-group>
-              <el-button :title="'新增'" icon="el-icon-plus" type="primary" @click="add"/>
-              <el-button :title="'修改'" icon="el-icon-edit" type="primary" @click="edit"/>
-              <el-button :title="'删除'" icon="el-icon-delete" type="danger" @click="remove"/>
-              <slot name="header-buttons"></slot>
-            </el-button-group>
+            <template v-for="field in fields">
+              <form-item v-if="field.searchable" v-model:value="params[field.prop]"
+                         :field="field" :options="dictionaries[field.dictionary ? field.dictionary : field.prop]"/>
+            </template>
+            <slot name="search"></slot>
+            <el-form-item>
+              <el-button-group>
+                <el-button :title="'查 询'" type="primary" @click="search">查 询</el-button>
+                <el-button :title="'清 空'" type="primary" @click="clear">清 空</el-button>
+              </el-button-group>
+            </el-form-item>
           </el-col>
-        </el-row>
-      </el-header>
-      <el-main>
-        <data-grid ref="datagrid" :data="data" :dictionaries="dictionaries" :fields="fields" :loading="tableLoading"
-                   :page="page" :pageable="pageable">
-          <template v-for="slot in slots" v-slot:[slot]="scope">
-            <slot :name="slot" :row="scope.row"/>
-          </template>
-        </data-grid>
-        <slot/>
-      </el-main>
-    </el-container>
+        </el-form>
+        <el-col :span="24">
+          <el-button-group>
+            <el-button :title="$t('button.add')" icon="el-icon-plus" type="primary" @click="add"/>
+            <el-button :title="'修改'" icon="el-icon-edit" type="primary" @click="edit"/>
+            <el-button :title="'删除'" icon="el-icon-delete" type="danger" @click="remove"/>
+            <slot name="header-buttons"></slot>
+          </el-button-group>
+        </el-col>
+      </el-row>
+    </el-header>
+    <el-main>
+      <data-grid ref="datagrid" :data="data" :dictionaries="dictionaries" :fields="fields" :loading="tableLoading"
+                 :page="page" :pageable="pageable">
+        <template v-for="slot in slots" v-slot:[slot]="scope">
+          <slot :name="slot" :row="scope.row"/>
+        </template>
+      </data-grid>
+      <slot/>
+    </el-main>
   </el-container>
 
   <el-dialog v-model="dialogVisible" :title="title" :width="width" @closed="closed">
@@ -72,15 +67,11 @@ export default {
       type: Object
     },
     width: {
-      default: '60%'
+      default: '65%'
     },
     pageable: {
       type: Boolean,
       default: true
-    },
-    treeable: {
-      type: Boolean,
-      default: false
     },
     searchable: {
       type: Boolean,
@@ -93,10 +84,13 @@ export default {
   },
   data() {
     return {
+      title: '',
+      loading: false,
+      tableLoading: false,
+      dialogVisible: false,
       slots: ["op"],
       op: 'op',
       data: [],
-      treeData: [],
       model: {},
       params: {},
       page: {
@@ -112,13 +106,12 @@ export default {
           this.load();
         },
       },
-      title: '',
-      loading: false,
-      tableLoading: false,
-      dialogVisible: false,
     }
   },
   methods: {
+    search() {
+      this.load();
+    },
     load(params = {}) {
       this.tableLoading = true;
       if (this.pageable) {
@@ -134,28 +127,53 @@ export default {
       })
     },
     add() {
-      this.open("新增");
+      this.open(this.$t('button.add'));
     },
-    edit(id) {
-      this.$axios.post('', {
-        id: id
-      }).then(res => {
-        this.model = res;
-        this.open("修改");
-      }).catch(err => {
-      })
+    edit() {
+      let selectedIds = this.$refs.datagrid.getSelectedIds();
+      if (selectedIds.length === 1) {
+        this.$axios.post('', {
+          id: selectedIds[0],
+        }).then(res => {
+          this.model = res;
+          this.open("修改");
+        })
+      } else {
+        this.$notify({message: '请选择一条记录！', type: 'error'});
+      }
     },
     save() {
       this.loading = true;
-      this.$axios.post('', this.model).then(res => {
-        this.close();
-      }).catch(err => {
-        this.loading = false;
-      })
+      this.$refs.form.validate((valid, obj) => {
+        console.log(obj)
+        if (valid) {
+          this.$axios.post('', this.model).then(res => {
+            this.$notify({message: '操作成功！', type: 'success'});
+            this.close();
+            this.loading = false;
+          }).catch(err => {
+            this.loading = false;
+          })
+        }
+      });
     },
-    remove() {
-      console.log(this.$refs.datagrid.getSelectedIds())
-      this.$refs.datagrid.getSelectedIds();
+    remove(id) {
+      let selectedIds = [];
+      if (id) {
+        selectedIds.push(id);
+      } else {
+        selectedIds = this.$refs.datagrid.getSelectedIds();
+      }
+
+      if (selectedIds.length !== 1) {
+        this.$axios.post('', {
+          ids: selectedIds,
+        }).then(res => {
+          this.$notify({message: '操作成功！', type: 'success'});
+        })
+      } else {
+        this.$notify({message: '请选择一条或多条记录！', type: 'error'});
+      }
     },
     open(title) {
       this.title = title;
@@ -165,7 +183,6 @@ export default {
       this.dialogVisible = false;
     },
     closed() {
-      this.loading = false;
       this.model = {};
     },
     clear() {
@@ -177,7 +194,6 @@ export default {
     }
   },
   created() {
-    console.log(this.user.username)
     this.fields.forEach(item => {
       if (item.slot) {
         this.slots.push(item.slot);
@@ -197,9 +213,11 @@ function copy(source, target) {
 </script>
 
 <style scoped>
-.jeesdp .tree-body {
-  box-sizing: border-box;
-  border: 1px solid #EBEEF5;
-  overflow: auto;
+.el-main {
+  padding: 20px 0;
+}
+
+.el-header {
+  padding: 0;
 }
 </style>

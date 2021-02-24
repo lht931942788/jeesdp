@@ -89,7 +89,7 @@
           :value="key"
       />
     </el-select>
-
+    <wang-editor v-if="field.fieldType === 'editor'" v-model:value="value"/>
   </el-form-item>
 </template>
 
@@ -110,13 +110,14 @@ export default {
       type: Object,
     }
   },
+  emits: ['update:value'],
   data() {
     return {
       model: null,
     }
   },
   watch: {
-    'model': {
+    model: {
       handler(newValue, oldValue) {
         let value = newValue;
         if (newValue && (this.field.fieldType === 'datePicker' || this.field.fieldType === 'timePicker')) {
@@ -125,7 +126,7 @@ export default {
         this.$emit('update:value', value);
       }
     },
-    'value': {
+    value: {
       handler(newValue, oldValue) {
         this.model = newValue;
       }

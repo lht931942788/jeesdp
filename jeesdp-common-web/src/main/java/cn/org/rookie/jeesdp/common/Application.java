@@ -2,15 +2,10 @@ package cn.org.rookie.jeesdp.common;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.*;
-import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,19 +54,4 @@ public class Application {
         return null;
     }
 
-    @Component
-    public static class CorsConfigur {
-        @Bean
-        public CorsFilter corsFilter() {
-            final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            final CorsConfiguration config = new CorsConfiguration();
-            config.setAllowCredentials(true);
-            config.addAllowedHeader("*");
-            config.addAllowedMethod("*");
-            config.addAllowedOriginPattern("*");
-            config.setMaxAge(18000L);
-            source.registerCorsConfiguration("/**", config);
-            return new CorsFilter(source);
-        }
-    }
 }

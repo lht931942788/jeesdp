@@ -15,23 +15,55 @@ const routes = [{
         component: () => import('../../views/Home.vue'),
     },]
 },]
+
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
     routes,
 });
 
+let flag = true;
+
 router.beforeEach((to, from, next) => {
     let path = to.path;
+    cookie.set("access_token", "ss")
     if (cookie.get("access_token")) {
+        if (flag) {
+            let routeList = [{
+                name: 'system',
+                path: '/system',
+                component: () => import('../../views/Router.vue'),
+                children: [{
+                    name: 'menu',
+                    path: '/system/menu',
+                    component: () => import('../../views/system/Menu.vue'),
+                }, {
+                    name: 'dept',
+                    path: '/system/dept',
+                    component: () => import('../../views/system/Dept.vue'),
+                }, {
+                    name: 'role',
+                    path: '/system/role',
+                    component: () => import('../../views/system/Role.vue'),
+                }]
+            }]
+
+            routeList.forEach(value => {
+                router.addRoute('index', value);
+            })
+            flag = false;
+            router.push({path: '/home'}).then(r => {
+                next();
+            })
+        } else {
+            next();
+        }
+    } else {
         if (path === '/login') {
             next();
         } else {
             next({path: '/login'});
         }
-    } else {
-        next();
     }
 });
-
 
 export default router;

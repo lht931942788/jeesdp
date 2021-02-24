@@ -23,7 +23,7 @@ import java.util.Set;
 public class LogAspect {
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
-    @Pointcut("@annotation(cn.org.rookie.common.annotation.Log)")
+    @Pointcut("@annotation(cn.org.rookie.jeesdp.common.annotation.Log)")
     public void log() {
     }
 

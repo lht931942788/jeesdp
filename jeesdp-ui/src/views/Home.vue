@@ -1,6 +1,6 @@
 <template>
   <common-grid ref="grid" :dictionaries="dictionaries" :fields="fields"/>
-  <div id="editor"></div>
+  <monaco-editor :language="'json'"/>
 </template>
 <script>
 
@@ -8,6 +8,7 @@ export default {
   name: 'Home',
   data() {
     return {
+      test: 'test',
       active: 1,
       dictionaries: {
         demo: {
@@ -38,6 +39,10 @@ export default {
         format: 'YYYY-MM-DD HH:mm:ss',
         searchable: true
       }, {
+        fieldType: 'editor',
+        prop: 'text',
+        label: '测试',
+      }, {
         prop: 'op',
         label: '操作',
         slot: 'op'
@@ -57,7 +62,7 @@ export default {
   },
   methods: {
     onClick(row) {
-      console.log(row)
+      console.log(this.test)
     },
     click() {
       this.xxx = "llll"
@@ -71,35 +76,16 @@ export default {
     }
   },
   mounted() {
-    /*ClassicEditor.create(document.querySelector('#editor'), {
-      initialData: '<h2>Initial data</h2><p>Foo bar.</p>',
-      language: 'zh-cn',
-    }).then(editor => {
-      console.log(editor);
-      //console.log(Array.from(editor.ui.componentFactory.names()))
-    }).catch(error => {
-      console.error(error);
-    });*/
-    //this.$refs.grid.setData(this.demo);
   },
   created() {
-    console.log(this.user.username)
     this.user.username = 222
   }
 }
 
-function copy(source, target) {
-  for (let key in source) {
-    if (source.hasOwnProperty(key)) {
-      target[key] = source[key];
-    }
-  }
-  return target;
-}
 </script>
 
 <style scoped>
-.ck-content {
-  height: 600px !important;
+.el-backtop {
+  z-index: 99999;
 }
 </style>

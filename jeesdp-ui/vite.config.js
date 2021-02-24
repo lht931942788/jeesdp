@@ -4,33 +4,26 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 const path = require("path");
 
 export default ({command, mode}) => {
-    console.log(command, mode)
     return {
-        alias: {
-            "/@/": path.resolve(__dirname, "./src")
+        resolve: {
+            alias: {
+                // 键必须以斜线开始和结束
+                '/@/': path.resolve(__dirname, './src')
+            }
         },
         build: {
             manifest: true
         },
-        define: {
-            host: mode === "production" ? "http://localhost:8080" : "http://localhost:8090",
-        },
+        /*define: {
+            BASE_URL: mode === "production" ? "http://localhost:8080" : "http://localhost:8090",
+        },*/
         open: true,
-        optimizeDeps: {
-            include: [
-                "element-plus/lib/locale",
-                'element-plus/lib/locale/lang/en',
-                "element-plus/lib/locale/lang/zh-cn",
-            ],
-            exclude: [],
-            auto: true
-        },
         plugins: [
             vuePlugin(),
             vueJsx(),
         ],
         server: {
-            port: 8080,
+            port: 80,
         }
         /*proxy: {
             "/api": {

@@ -1,3 +1,4 @@
+/*
 package cn.org.rookie.jeesdp.utils;
 
 import cn.org.rookie.jeesdp.component.Record;
@@ -12,11 +13,13 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 
+*/
 /**
  * Excel工具类
  *
  * @author LIHAITAO
- */
+ *//*
+
 
 public abstract class ExcelUtils {
 
@@ -31,9 +34,11 @@ public abstract class ExcelUtils {
 
 
 
-        /*Workbook wb = new XSSFWorkbook(new FileInputStream("D:\\Work\\demo.xlsx"));
+        */
+/*Workbook wb = new XSSFWorkbook(new FileInputStream("D:\\Work\\demo.xlsx"));
         Sheet sheet = wb.getSheetAt(0);
-        read(sheet, 1, 0);*/
+        read(sheet, 1, 0);*//*
+
     }
 
     public static Record read(HSSFWorkbook wb) {
@@ -89,3 +94,4 @@ public abstract class ExcelUtils {
         return null;
     }
 }
+*/

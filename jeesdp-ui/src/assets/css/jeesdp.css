@@ -13,10 +13,14 @@
     border-radius: 10px;
 }
 
-html, body, #app, .el-container {
+html, body, #app {
     height: 100%;
     width: 100%;
     margin: 0;
+}
+
+html, body, #app {
+    overflow: hidden;
 }
 
 .el-dialog__body {
