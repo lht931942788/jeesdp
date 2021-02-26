@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.org.rookie</groupId>
-            <artifactId>jeesdp-core</artifactId>
+            <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -60,7 +60,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/jeesdp/libs</outputDirectory>
+                            <outputDirectory>${project.build.directory}/jeesdp/lib</outputDirectory>
                             <excludeTransitive>false</excludeTransitive>
                             <stripVersion>false</stripVersion>
                         </configuration>
@@ -79,7 +79,7 @@
                         <!-- 配置META-INF -->
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix>./libs</classpathPrefix>
+                            <classpathPrefix>../lib</classpathPrefix>
                             <mainClass>cn.org.rookie.jeesdp.JeesdpApplication</mainClass>
                         </manifest>
                     </archive>

@@ -5,6 +5,7 @@ import cookie from "js-cookie";
 import axios from "./axios";
 import locale from "./locale";
 import router from "./router";
+import ElementPlus from "element-plus";
 import dayjs from "dayjs";
 import DataGrid from "./datagrid";
 import FormItem from "./formitem";
@@ -13,7 +14,6 @@ import AsideMenu from "./asidemenu";
 import JsonEditor from "./jsoneditor";
 import WangEditor from "./wangeditor";
 import MonacoEditor from "./monacoeditor";
-import ElementPlus from "element-plus";
 
 export default {
     install: (app, options) => {
@@ -26,8 +26,7 @@ export default {
         app.config.globalProperties.$axios = axios;
         app.config.globalProperties.$cookie = cookie;
         app.config.globalProperties.$dayjs = dayjs;
-        app.config.globalProperties.user = {};
-        app.config.globalProperties.clone = (source, target) => {
+        app.config.globalProperties.$clone = (source, target) => {
             target = target || {};
             for (let i in source) {
                 if (source.hasOwnProperty(i)) {
@@ -36,6 +35,7 @@ export default {
             }
             return target;
         }
+        app.config.globalProperties.user = {};
         app.component(JsonEditor.name, JsonEditor);
         app.component(MonacoEditor.name, MonacoEditor);
         app.component(WangEditor.name, WangEditor);
