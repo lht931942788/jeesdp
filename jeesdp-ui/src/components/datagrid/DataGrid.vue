@@ -1,7 +1,7 @@
 <template>
   <el-table v-loading="loading" :data="data" :height="height" :row-key="rowKey" border
             element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"
-            f tooltip-effect="dark" @selection-change="selectionChange">
+            f tooltip-effect="dark" @selection-change="selectionChange" @row-dblclick="rowCblclick">
 
     <el-table-column v-if="selection" align="center" header-align="center" type="selection"/>
 
@@ -96,6 +96,9 @@ export default {
     selectionChange(selection) {
       this.selection = selection;
     },
+    rowCblclick(row, column, event) {
+
+    }
   },
 }
 </script>

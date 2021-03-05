@@ -8,38 +8,28 @@ export default {
   name: 'Home',
   data() {
     return {
-      test: 'test',
-      active: 1,
       dictionaries: {
         demo: {
           demo: "aa",
           test: "bb",
-          2: "bbssssssssssssssssssssssssssssss",
-          3: "bbssssssssssssssssssssssssssssss",
-          5: "bbssssssssssssssssssssssssssssss",
-          6: "bbssssssssssssssssssssssssssssss",
-          9: "bbssssssssssssssssssssssssssssss",
-          8: "bbssssssssssssssssssssssssssssss",
-          10: "bbssssssssssssssssssssssssssssss"
         }
       },
-      model: {},
-      visible: true,
       fields: [{
-        fieldType: 'radio',
-        type: 'password',
+        type: 'checkbox',
         prop: 'demo',
         label: '测试',
         slot: 'demo'
       }, {
-        fieldType: 'datePicker',
-        type: 'datetime',
+        type: 'datePicker',
+        options: {
+          type: 'datetime'
+        },
         prop: 'time',
         label: '时间',
         format: 'YYYY-MM-DD HH:mm:ss',
         searchable: true
       }, {
-        fieldType: 'editor',
+        type: 'editor',
         prop: 'text',
         label: '测试',
       }, {
@@ -76,6 +66,7 @@ export default {
     }
   },
   mounted() {
+    this.$refs.grid.setData(this.demo);
   },
   created() {
     this.user.username = 222

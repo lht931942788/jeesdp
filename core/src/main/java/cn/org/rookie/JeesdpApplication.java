@@ -1,4 +1,4 @@
-package cn.org.rookie.jeesdp;
+package cn.org.rookie;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 //@EnableWorkflowConfiguration
 @EnableTransactionManagement
-@MapperScan("cn.org.rookie.jeesdp.mapper")
+@MapperScan("cn.org.rookie.mapper")
 public class JeesdpApplication {
 
     public static void main(String[] args) {

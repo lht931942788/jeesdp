@@ -1,6 +1,6 @@
 package cn.org.rookie.component;
 
-import cn.org.rookie.jeesdp.common.annotation.Log;
+import cn.org.rookie.annotation.Log;
 import cn.org.rookie.utils.RequestUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -24,7 +24,7 @@ import java.util.Set;
 public class LogAspect {
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
-    @Pointcut("@annotation(cn.org.rookie.jeesdp.common.annotation.Log)")
+    @Pointcut("@annotation(cn.org.rookie.annotation.Log)")
     public void log() {
     }
 

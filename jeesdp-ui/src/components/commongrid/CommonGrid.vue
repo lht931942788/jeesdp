@@ -42,12 +42,12 @@
     <el-form ref="form" :model="model" label-position="right" label-width="120px">
       <template v-for="field in fields">
         <form-item v-model:value="model[field.prop]" :field="field"
-                   :options="dictionaries[field.dictionary ? field.dictionary : field.prop]"/>
+                   :options="dictionaries[field.dictionary ? field.dictionary : field.prop]" :preview="preview"/>
       </template>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button :loading="loading" title="确定" type="primary" @click="save">确定</el-button>
+        <el-button v-if="!preview" :loading="loading" title="确定" type="primary" @click="save">确定</el-button>
         <el-button title="取消" @click="close">取消</el-button>
       </span>
     </template>
@@ -93,6 +93,7 @@ export default {
       data: [],
       model: {},
       params: {},
+      preview: false,
       page: {
         pageNum: 1,
         pageSize: 10,
@@ -112,19 +113,12 @@ export default {
     search() {
       this.load();
     },
-    load(params = {}) {
-      this.tableLoading = true;
-      if (this.pageable) {
-        params.pageNum = this.page.pageNum;
-        params.pageSize = this.page.pageSize;
+    open(title) {
+      this.title = title;
+      this.model = {
+        demo: ['demo', 'test']
       }
-      this.$axios.post('', copy(params, this.params)).then(res => {
-        this.data = res.list;
-        this.page.total = res.total;
-        this.tableLoading = false;
-      }).catch(err => {
-        this.tableLoading = false;
-      })
+      this.dialogVisible = true;
     },
     add() {
       this.open(this.$t('button.add'));
@@ -132,9 +126,7 @@ export default {
     edit() {
       let selectedIds = this.$refs.datagrid.getSelectedIds();
       if (selectedIds.length === 1) {
-        this.$axios.post('', {
-          id: selectedIds[0],
-        }).then(res => {
+        this.get(selectedIds[0]).then(res => {
           this.model = res;
           this.open("修改");
         })
@@ -142,12 +134,26 @@ export default {
         this.$notify({message: '请选择一条记录！', type: 'error'});
       }
     },
-    save() {
+    onRemove(id) {
+      let selectedIds = [];
+      if (id) {
+        selectedIds.push(id);
+      } else {
+        selectedIds = this.$refs.datagrid.getSelectedIds();
+      }
+      if (selectedIds.length !== 1) {
+        this.remove().then(res => {
+          this.$notify({message: '操作成功！', type: 'success'});
+        })
+      } else {
+        this.$notify({message: '请选择一条或多条记录！', type: 'error'});
+      }
+    },
+    onSave() {
       this.loading = true;
       this.$refs.form.validate((valid, obj) => {
-        console.log(obj)
         if (valid) {
-          this.$axios.post('', this.model).then(res => {
+          this.save(this.model).then(res => {
             this.$notify({message: '操作成功！', type: 'success'});
             this.close();
             this.loading = false;
@@ -157,33 +163,43 @@ export default {
         }
       });
     },
-    remove(id) {
-      let selectedIds = [];
-      if (id) {
-        selectedIds.push(id);
-      } else {
-        selectedIds = this.$refs.datagrid.getSelectedIds();
+    load(params = {}) {
+      this.tableLoading = true;
+      if (this.pageable) {
+        params.pageNum = this.page.pageNum;
+        params.pageSize = this.page.pageSize;
       }
-
-      if (selectedIds.length !== 1) {
-        this.$axios.post('', {
-          ids: selectedIds,
-        }).then(res => {
-          this.$notify({message: '操作成功！', type: 'success'});
-        })
-      } else {
-        this.$notify({message: '请选择一条或多条记录！', type: 'error'});
-      }
+      this.list(copy(params, this.params)).then(res => {
+        this.data = res.list;
+        this.page.total = res.total;
+        this.tableLoading = false;
+      }).catch(err => {
+        this.tableLoading = false;
+      })
     },
-    open(title) {
-      this.title = title;
-      this.dialogVisible = true;
+    get(id) {
+      return this.$axios.post('', {id: id,});
+    },
+    remove(ids) {
+      return this.$axios.post('', {ids: ids,});
+    },
+    save(form) {
+      return this.$axios.post('', form);
+    },
+    list(params) {
+      return this.$axios.post('', params);
     },
     close() {
       this.dialogVisible = false;
     },
     closed() {
-      this.model = {};
+      this.fields.forEach(field => {
+        if (''.indexOf(field.type) > -1) {
+          this.model[field.prop] = '';
+        } else {
+
+        }
+      });
     },
     clear() {
       this.params = {};
@@ -194,11 +210,12 @@ export default {
     }
   },
   created() {
-    this.fields.forEach(item => {
-      if (item.slot) {
-        this.slots.push(item.slot);
+    this.fields.forEach(field => {
+      this.model[field.prop] = null
+      if (field.slot) {
+        this.slots.push(field.slot);
       }
-    })
+    });
   }
 }
 

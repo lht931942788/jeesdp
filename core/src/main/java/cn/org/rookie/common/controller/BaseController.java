@@ -1,9 +1,9 @@
 package cn.org.rookie.common.controller;
 
+import cn.org.rookie.annotation.Perms;
 import cn.org.rookie.common.service.BaseService;
 import cn.org.rookie.component.Response;
 import cn.org.rookie.entity.BaseEntity;
-import cn.org.rookie.jeesdp.common.annotation.Perms;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;

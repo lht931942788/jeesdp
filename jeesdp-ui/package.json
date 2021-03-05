@@ -15,7 +15,7 @@
     "vue": "^3.0.5",
     "vue-router": "^4.0.4",
     "vue-i18n": "^9.0.0-rc.8",
-    "element-plus": "^1.0.2-beta.32",
+    "element-plus": "^1.0.2-beta.33",
     "echarts": "^5.0.2",
     "js-cookie": "^2.2.1",
     "dayjs": "^1.10.4",

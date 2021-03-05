@@ -6,6 +6,7 @@ import axios from "./axios";
 import locale from "./locale";
 import router from "./router";
 import ElementPlus from "element-plus";
+import utils from './utlis';
 import dayjs from "dayjs";
 import DataGrid from "./datagrid";
 import FormItem from "./formitem";
@@ -26,15 +27,7 @@ export default {
         app.config.globalProperties.$axios = axios;
         app.config.globalProperties.$cookie = cookie;
         app.config.globalProperties.$dayjs = dayjs;
-        app.config.globalProperties.$clone = (source, target) => {
-            target = target || {};
-            for (let i in source) {
-                if (source.hasOwnProperty(i)) {
-                    target[i] = source[i];
-                }
-            }
-            return target;
-        }
+        app.config.globalProperties.$utils = utils;
         app.config.globalProperties.user = {};
         app.component(JsonEditor.name, JsonEditor);
         app.component(MonacoEditor.name, MonacoEditor);
