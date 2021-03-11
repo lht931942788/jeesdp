@@ -2,24 +2,39 @@ package cn.org.rookie.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public abstract class BaseEntity implements Cloneable {
-
-    private String createUser;
+public abstract class BaseEntity implements Cloneable, Serializable {
+    /**
+     * 创建人
+     */
+    private String createBy;
+    /**
+     * 创建时间
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:ss")
     private Date createTime;
-    private String updateUser;
+    /**
+     * 修改人
+     */
+    private String modifyBy;
+    /**
+     * 修改时间
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:ss")
     private Date updateTime;
-    private long flag;
+    /**
+     * 是否删除
+     */
+    private boolean isDelete;
 
-    public String getCreateUser() {
-        return createUser;
+    public String getCreateBy() {
+        return createBy;
     }
 
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
     }
 
     public Date getCreateTime() {
@@ -30,12 +45,12 @@ public abstract class BaseEntity implements Cloneable {
         this.createTime = createTime;
     }
 
-    public String getUpdateUser() {
-        return updateUser;
+    public String getModifyBy() {
+        return modifyBy;
     }
 
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
+    public void setModifyBy(String modifyBy) {
+        this.modifyBy = modifyBy;
     }
 
     public Date getUpdateTime() {
@@ -46,11 +61,11 @@ public abstract class BaseEntity implements Cloneable {
         this.updateTime = updateTime;
     }
 
-    public long getFlag() {
-        return flag;
+    public boolean isDelete() {
+        return isDelete;
     }
 
-    public void setFlag(long flag) {
-        this.flag = flag;
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 }

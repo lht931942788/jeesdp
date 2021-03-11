@@ -7,7 +7,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-public class RequestUtils {
+public abstract class RequestUtils {
 
     /**
      * 获取当前request

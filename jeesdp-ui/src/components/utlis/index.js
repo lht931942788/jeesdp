@@ -39,6 +39,7 @@ export default {
         for (let i = 0; i < source.length; i++) {
             let record = source[i];
             if (record[prop.parent] === prop.root) {
+                source.splice(i, 1);
                 let propClone = this.deepClone(prop);
                 propClone.root = record[prop.key];
                 let chinldren = this.listToTree(source, propClone);
@@ -46,6 +47,7 @@ export default {
                     record[prop.chinldren] = chinldren;
                 }
                 result.push(record);
+                i--;
             }
         }
         return result;

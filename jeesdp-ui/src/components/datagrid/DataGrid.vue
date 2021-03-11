@@ -1,9 +1,11 @@
 <template>
   <el-table v-loading="loading" :data="data" :height="height" :row-key="rowKey" border
             element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"
-            f tooltip-effect="dark" @selection-change="selectionChange" @row-dblclick="rowCblclick">
+            tooltip-effect="dark" @selection-change="selectionChange" @row-dblclick="rowDblclick">
 
-    <el-table-column v-if="selection" align="center" header-align="center" type="selection"/>
+    <el-table-column v-if="selection" align="center" fixed header-align="center" type="selection"/>
+    <el-table-column v-if="index" :index="indexMethod" align="center" fixed header-align="center" label="序号"
+                     type="index"/>
 
     <template v-for="field in fields">
       <template v-if="field.fieldType !== 'hidden'">
@@ -12,21 +14,8 @@
                          :label="field.label" :prop="field.prop" :show-overflow-tooltip="true"
                          :width="field.width ? field.width : 150">
 
-          <template v-if="'timePicker,datePicker'.indexOf(field.fieldType) > -1" #default="scope">
-            {{ $dayjs(scope.row[field.prop]).format(field.format) }}
-          </template>
-
-          <template v-else-if="'select,radio,checkbox'.indexOf(field.fieldType) > -1" #default="scope">
-            {{ dictionaries[field.dictionary ? field.dictionary : field.prop][scope.row[field.prop]] }}
-          </template>
-
-          <template v-else-if="field.buttons" #default="scope">
-            <el-button-group>
-              <el-button v-for="button in field.buttons" :icon="button.icon" :type="button.type"
-                         @click="eval(button.click)">
-                {{ button.name }}
-              </el-button>
-            </el-button-group>
+          <template v-if="'select,radio,checkbox'.indexOf(field.type) > -1 && field.dict" #default="scope">
+            {{ translateDict(options[field.dict ? field.dict : field.prop], scope.row[field.prop]) }}
           </template>
 
           <template v-else-if="field.slot" #default="scope">
@@ -38,7 +27,7 @@
     </template>
   </el-table>
 
-  <el-pagination v-if="pageable" :current-page="page.pageNum" :page-size="page.pageSize"
+  <el-pagination v-if="page" :current-page="page.pageNum" :page-size="page.pageSize"
                  :page-sizes="[10, 20, 30, 40, 50, 100]" :total="page.total"
                  layout="jumper, prev, pager, next, sizes, total" @size-change="page.sizeChange"
                  @current-change="page.currentChange"/>
@@ -67,7 +56,7 @@ export default {
     height: {
       type: Number
     },
-    dictionaries: {
+    options: {
       type: Object
     },
     rowKey: {
@@ -78,10 +67,19 @@ export default {
       type: Boolean,
       default: false
     },
+    selection: {
+      type: Boolean,
+      default: true
+    },
+    index: {
+      type: Boolean,
+      default: true
+    },
   },
+  emits: ['rowDblclick'],
   data() {
     return {
-      selection: [],
+      selectedRows: [],
     }
   },
   methods: {
@@ -89,15 +87,34 @@ export default {
       return this.selected;
     },
     getSelectedIds() {
-      return this.selection.map(row => {
+      return this.selectedRows.map(row => {
         return row[this.rowKey];
       });
     },
     selectionChange(selection) {
-      this.selection = selection;
+      this.selectedRows = selection;
     },
-    rowCblclick(row, column, event) {
-
+    rowDblclick(row, column, event) {
+      this.$emit('rowDblclick', row, column, event)
+    },
+    indexMethod(index) {
+      if (this.pageable) {
+        return (this.page.pageNum - 1) * this.page.pageSize + index + 1;
+      }
+      return index + 1;
+    },
+    translateDict(dict, value) {
+      let result;
+      dict.forEach(item => {
+        if (item.value === value) {
+          result = item.label;
+        }
+      })
+      let children = dict.children;
+      if (children && !result) {
+        return this.translateDict(children, value);
+      }
+      return result;
     }
   },
 }

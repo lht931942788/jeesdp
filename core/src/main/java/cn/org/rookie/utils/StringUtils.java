@@ -45,6 +45,23 @@ public abstract class StringUtils {
     }
 
     /**
+     * 字符串集合添加分隔符,以逗号分割，返回字符串，带前缀后缀
+     *
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @param source 要添加分隔符的字符串集合
+     * @return 添加分隔符的字符串
+     */
+
+    public static String join(CharSequence prefix, CharSequence suffix, Collection<String> source) {
+        StringJoiner joiner = new StringJoiner(",", prefix, suffix);
+        for (String s : source) {
+            joiner.add(s);
+        }
+        return joiner.toString();
+    }
+
+    /**
      * 字符串数组添加分隔符，返回字符串，带前缀后缀
      *
      * @param delimiter 分割符
@@ -57,6 +74,20 @@ public abstract class StringUtils {
     public static String join(CharSequence delimiter, CharSequence prefix, CharSequence suffix, String[] source) {
         return join(delimiter, prefix, suffix, Arrays.asList(source));
     }
+
+    /**
+     * 字符串数组添加分隔符，返回字符串，带前缀后缀
+     *
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @param source 要添加分隔符的字符串数组
+     * @return 添加分隔符的字符串
+     */
+
+    public static String join(CharSequence prefix, CharSequence suffix, String[] source) {
+        return join(prefix, suffix, Arrays.asList(source));
+    }
+
 
     /**
      * 字符串集合添加分隔符，返回字符串
@@ -75,6 +106,21 @@ public abstract class StringUtils {
     }
 
     /**
+     * 字符串集合添加分隔符,以逗号分割，返回字符串
+     *
+     * @param source 要添加分隔符的字符串集合
+     * @return 添加分隔符的字符串
+     */
+
+    public static String join(Collection<String> source) {
+        StringJoiner joiner = new StringJoiner(",");
+        for (String s : source) {
+            joiner.add(s);
+        }
+        return joiner.toString();
+    }
+
+    /**
      * 字符串数组添加分隔符，返回字符串
      *
      * @param delimiter 分割符
@@ -84,6 +130,17 @@ public abstract class StringUtils {
 
     public static String join(CharSequence delimiter, String[] source) {
         return join(delimiter, Arrays.asList(source));
+    }
+
+    /**
+     * 字符串数组添加分隔符,以逗号分割，返回字符串
+     *
+     * @param source 要添加分隔符的字符串数组
+     * @return 添加分隔符的字符串
+     */
+
+    public static String join(String[] source) {
+        return join(Arrays.asList(source));
     }
 
     /**
@@ -111,7 +168,7 @@ public abstract class StringUtils {
      */
 
     public static String underlineToHump(String str) {
-        Matcher matcher = Pattern.compile("_(\\w)").matcher(str);
+        Matcher matcher = underlinePattern.matcher(str);
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
             matcher.appendReplacement(sb, matcher.group(1).toUpperCase());

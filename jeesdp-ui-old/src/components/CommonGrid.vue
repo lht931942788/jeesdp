@@ -118,7 +118,6 @@
                 if (this.order) {
                     params['order'] = this.order;
                 }
-                console.log(params)
                 this.$ajax.post(this.prop.url.data, params).then((data) => {
                     this.data = data.list;
                     if (this.pageable) {

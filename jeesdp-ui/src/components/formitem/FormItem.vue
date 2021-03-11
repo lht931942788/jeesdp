@@ -4,8 +4,7 @@
       :label="field.label + '：'"
       :label-width="field.labelWidth"
       :prop="field.prop"
-      :required="field.required"
-      :rules="field.rules"
+      :rules="validate && !preview ? field.rules : undefined"
   >
     <template v-if="preview && model && field.type !== 'editor' && Array.isArray(model)">
       <template v-if="field.options && field.options.type && field.options.type.indexOf('range') > -1">
@@ -24,12 +23,12 @@
         v-model="model"
     >
       <el-radio
-          v-for="(value,key) in options"
-          :key="value"
-          :label="key"
+          v-for="item in options"
+          :key="item.value"
+          :label="item.value"
           :disabled="field.disabled"
       >
-        {{ value }}
+        {{ item.label }}
       </el-radio>
     </el-radio-group>
 
@@ -38,38 +37,38 @@
         v-model="model"
     >
       <el-checkbox
-          v-for="(value,key) in options"
-          :key="value"
-          :label="key"
+          v-for="item in options"
+          :key="item.value"
+          :label="item.value"
           :disabled="field.disabled"
       >
-        {{ value }}
+        {{ item.label }}
       </el-checkbox>
     </el-checkbox-group>
 
     <el-input
         v-if="field.type === 'input' && !preview"
         v-model="model"
-        :clearable="true"
         :disabled="field.disabled"
         :placeholder="field.placeholder" :type="field.options.type"
+        clearable
     />
 
     <el-time-picker
         v-if="field.type === 'timePicker' && !preview"
         v-model="model"
-        :clearable="true"
         :disabled="field.disabled"
         :placeholder="field.placeholder"
+        clearable
     />
 
     <el-date-picker
         v-if="field.type === 'datePicker' && !preview"
         v-model="model"
-        :clearable="true"
         :disabled="field.disabled"
         :placeholder="field.placeholder"
         :type="field.options.type"
+        clearable
     />
 
     <el-switch
@@ -83,23 +82,25 @@
     <el-cascader
         v-if="field.type === 'cascader' && !preview"
         v-model="model"
-        :clearable="true"
         :disabled="field.disabled"
         :options="options"
         :placeholder="field.placeholder"
+        clearable
+        filterable
     />
 
     <el-select v-if="field.type === 'select' && !preview"
                v-model="model"
-               :clearable="true"
                :disabled="field.disabled"
                :placeholder="field.placeholder"
+               clearable
+               filterable
     >
       <el-option
-          v-for="(value,key) in options"
-          :key="key"
-          :label="value"
-          :value="key"
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
       />
     </el-select>
 
@@ -114,20 +115,25 @@ import dayjs from "dayjs";
 export default {
   name: "FormItem",
   props: {
-    preview: {
-      type: Boolean,
-      default: false,
+    value: {
+      required: true,
     },
     field: {
       type: Object,
       required: true,
     },
-    value: {
-      required: true,
+    preview: {
+      type: Boolean,
+      default: false,
+    },
+    validate: {
+      type: Boolean,
+      default: true,
     },
     options: {
       type: Object,
-    }
+    },
+
   },
   emits: ['update:value'],
   data() {
@@ -137,7 +143,6 @@ export default {
   },
   created() {
     this.model = this.value;
-    console.log(this.value)
   },
   watch: {
     model: {
@@ -152,9 +157,8 @@ export default {
     value: {
       handler(newValue, oldValue) {
         this.model = newValue;
-        console.log(newValue)
       }
-    }
+    },
   },
 }
 </script>

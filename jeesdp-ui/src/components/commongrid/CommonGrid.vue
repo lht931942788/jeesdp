@@ -2,36 +2,36 @@
   <el-container>
     <el-header style="height: auto">
       <el-row>
-        <el-form v-if="searchable" ref="search" v-model="params" inline label-position="right">
+        <el-form v-if="searchable" ref="search" v-model="params" inline label-position="left">
           <el-col :span="24">
             <template v-for="field in fields">
-              <form-item v-if="field.searchable" v-model:value="params[field.prop]"
-                         :field="field" :options="dictionaries[field.dictionary ? field.dictionary : field.prop]"/>
+              <form-item v-if="field.searchable" v-model:value="params[field.prop]" :field="field"
+                         :options="options[field.dict ? field.dict : field.prop]" :validate="false"/>
             </template>
             <slot name="search"></slot>
             <el-form-item>
               <el-button-group>
-                <el-button :title="'查 询'" type="primary" @click="search">查 询</el-button>
-                <el-button :title="'清 空'" type="primary" @click="clear">清 空</el-button>
+                <el-button :title="'查询'" type="primary" @click="onSearch">查询</el-button>
+                <el-button :title="'清空'" type="primary" @click="onClear">清空</el-button>
               </el-button-group>
             </el-form-item>
           </el-col>
         </el-form>
         <el-col :span="24">
           <el-button-group>
-            <el-button :title="$t('button.add')" icon="el-icon-plus" type="primary" @click="add"/>
-            <el-button :title="'修改'" icon="el-icon-edit" type="primary" @click="edit"/>
-            <el-button :title="'删除'" icon="el-icon-delete" type="danger" @click="remove"/>
+            <el-button :title="$t('button.add')" icon="el-icon-plus" type="primary" @click="onAdd"/>
+            <el-button :title="'修改'" icon="el-icon-edit" type="primary" @click="onEdit"/>
+            <el-button :title="'删除'" icon="el-icon-delete" type="danger" @click="onRemove"/>
             <slot name="header-buttons"></slot>
           </el-button-group>
         </el-col>
       </el-row>
     </el-header>
     <el-main>
-      <data-grid ref="datagrid" :data="data" :dictionaries="dictionaries" :fields="fields" :loading="tableLoading"
-                 :page="page" :pageable="pageable">
-        <template v-for="slot in slots" v-slot:[slot]="scope">
-          <slot :name="slot" :row="scope.row"/>
+      <data-grid ref="datagrid" :data="data" :fields="fields" :loading="tableLoading" :options="options"
+                 :page="page" @row-dblclick="onRowDblclick">
+        <template v-for="field in fields" v-slot:[field.slot]="scope">
+          <slot :name="field.slot" :row="scope.row"/>
         </template>
       </data-grid>
       <slot/>
@@ -41,13 +41,13 @@
   <el-dialog v-model="dialogVisible" :title="title" :width="width" @closed="closed">
     <el-form ref="form" :model="model" label-position="right" label-width="120px">
       <template v-for="field in fields">
-        <form-item v-model:value="model[field.prop]" :field="field"
-                   :options="dictionaries[field.dictionary ? field.dictionary : field.prop]" :preview="preview"/>
+        <form-item v-if="field.type !== 'operation'" v-model:value="model[field.prop]" :field="field"
+                   :options="options[field.dict ? field.dict : field.prop]" :preview="preview"/>
       </template>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button v-if="!preview" :loading="loading" title="确定" type="primary" @click="save">确定</el-button>
+        <el-button v-if="!preview" :loading="loading" title="确定" type="primary" @click="onSave">确定</el-button>
         <el-button title="取消" @click="close">取消</el-button>
       </span>
     </template>
@@ -63,7 +63,7 @@ export default {
       type: Array,
       required: true
     },
-    dictionaries: {
+    options: {
       type: Object
     },
     width: {
@@ -88,8 +88,7 @@ export default {
       loading: false,
       tableLoading: false,
       dialogVisible: false,
-      slots: ["op"],
-      op: 'op',
+      slots: [],
       data: [],
       model: {},
       params: {},
@@ -97,7 +96,7 @@ export default {
       page: {
         pageNum: 1,
         pageSize: 10,
-        total: 0,
+        total: 100,
         sizeChange: (pageSize) => {
           this.page.pageSize = pageSize;
           this.load();
@@ -110,20 +109,10 @@ export default {
     }
   },
   methods: {
-    search() {
-      this.load();
-    },
-    open(title) {
-      this.title = title;
-      this.model = {
-        demo: ['demo', 'test']
-      }
-      this.dialogVisible = true;
-    },
-    add() {
+    onAdd() {
       this.open(this.$t('button.add'));
     },
-    edit() {
+    onEdit() {
       let selectedIds = this.$refs.datagrid.getSelectedIds();
       if (selectedIds.length === 1) {
         this.get(selectedIds[0]).then(res => {
@@ -133,6 +122,21 @@ export default {
       } else {
         this.$notify({message: '请选择一条记录！', type: 'error'});
       }
+    },
+    onSave() {
+      this.$refs.form.validate((valid, messages) => {
+        if (valid) {
+          this.loading = true;
+          this.save(this.model).then(res => {
+            this.$notify({message: '操作成功！', type: 'success'});
+            this.load();
+            this.close();
+            this.loading = false;
+          }).catch(err => {
+            this.loading = false;
+          })
+        }
+      });
     },
     onRemove(id) {
       let selectedIds = [];
@@ -144,24 +148,23 @@ export default {
       if (selectedIds.length !== 1) {
         this.remove().then(res => {
           this.$notify({message: '操作成功！', type: 'success'});
+          this.load();
         })
       } else {
         this.$notify({message: '请选择一条或多条记录！', type: 'error'});
       }
     },
-    onSave() {
-      this.loading = true;
-      this.$refs.form.validate((valid, obj) => {
-        if (valid) {
-          this.save(this.model).then(res => {
-            this.$notify({message: '操作成功！', type: 'success'});
-            this.close();
-            this.loading = false;
-          }).catch(err => {
-            this.loading = false;
-          })
-        }
-      });
+    onSearch() {
+      this.load();
+    },
+    onClear() {
+      this.params = {};
+      this.load();
+    },
+    onRowDblclick(row, column) {
+      this.model = row;
+      this.preview = true;
+      this.open('查看');
     },
     load(params = {}) {
       this.tableLoading = true;
@@ -177,45 +180,36 @@ export default {
         this.tableLoading = false;
       })
     },
-    get(id) {
-      return this.$axios.post('', {id: id,});
+    save(data) {
+      return this.$axios.post('', data);
     },
     remove(ids) {
       return this.$axios.post('', {ids: ids,});
     },
-    save(form) {
-      return this.$axios.post('', form);
+    get(id) {
+      return this.$axios.post('', {id: id,});
     },
     list(params) {
       return this.$axios.post('', params);
+    },
+    open(title) {
+      this.title = title;
+      this.dialogVisible = true;
     },
     close() {
       this.dialogVisible = false;
     },
     closed() {
-      this.fields.forEach(field => {
-        if (''.indexOf(field.type) > -1) {
-          this.model[field.prop] = '';
-        } else {
-
-        }
-      });
-    },
-    clear() {
-      this.params = {};
-      this.load();
+      this.preview = false;
+      this.$refs.form.resetFields();
+      this.model = {};
     },
     setData(data) {
       this.data = data;
     }
   },
   created() {
-    this.fields.forEach(field => {
-      this.model[field.prop] = null
-      if (field.slot) {
-        this.slots.push(field.slot);
-      }
-    });
+
   }
 }
 

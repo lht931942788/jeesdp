@@ -1,6 +1,18 @@
 <template>
-  <common-grid ref="grid" :dictionaries="dictionaries" :fields="fields"/>
-  <monaco-editor :language="'json'"/>
+  <el-date-picker
+      v-model="test"
+      placeholder="选择日期时间"
+      type="datetime">
+  </el-date-picker>
+  <common-grid ref="grid" :fields="fields" :options="options">
+    <template #demo="{ row }">
+      {{ row.demo }}
+    </template>
+    <template #operation="{ row }">
+      {{ row.demo }}
+    </template>
+  </common-grid>
+  <el-button @click="click">哈哈</el-button>
 </template>
 <script>
 
@@ -8,43 +20,60 @@ export default {
   name: 'Home',
   data() {
     return {
-      dictionaries: {
-        demo: {
-          demo: "aa",
-          test: "bb",
-        }
+      test: '',
+      options: {
+        demo: [{
+          value: "aa",
+          label: "测试",
+        }, {
+          value: "bb",
+          label: "测试2",
+        }, {
+          value: "cc",
+          label: "测试3",
+        },]
       },
       fields: [{
-        type: 'checkbox',
+        type: 'select',
+        prop: 'ceshi',
+        label: '测试',
+        dict: 'demo',
+        rules: [{type: 'string', required: true, message: '请选择测试'}],
+      }, {
+        type: 'radio',
         prop: 'demo',
         label: '测试',
-        slot: 'demo'
+        slot: 'demo',
       }, {
         type: 'datePicker',
-        options: {
-          type: 'datetime'
-        },
         prop: 'time',
         label: '时间',
         format: 'YYYY-MM-DD HH:mm:ss',
-        searchable: true
+        rules: [{type: 'date', required: true, message: '请选择日期'}],
+        searchable: true,
+        options: {
+          type: 'datetime'
+        },
       }, {
         type: 'editor',
         prop: 'text',
         label: '测试',
       }, {
-        prop: 'op',
+        prop: 'operation',
+        type: 'operation',
         label: '操作',
-        slot: 'op'
+        slot: 'operation',
+        fixed: 'right'
       }],
       demo: [
         {
           id: '1',
-          demo: "demo",
+          demo: 'demo',
+          ceshi: 'aa',
           time: '2020-11-11 00:00:00'
         }, {
           id: '2',
-          demo: "test",
+          demo: 'demo',
           time: '2020-11-11 00:00:00'
         }
       ],
@@ -56,9 +85,11 @@ export default {
     },
     click() {
       this.xxx = "llll"
-      console.log(this.$refs.datagrid.getSelectedIds())
-      this.$axios.post('/demo', this.model).then((res) => {
-        console.log(res)
+      let test = this.test;
+      this.$axios.post('/demo', {
+        demo: '2021-03-10 17:35:15'
+      }).then((res) => {
+        this.test = res.data.demo
       });
     },
     next() {

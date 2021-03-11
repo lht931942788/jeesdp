@@ -105,14 +105,9 @@ public abstract class BaseController<T extends BaseEntity, E, M extends BaseServ
         return baseService.select(ids);
     }
 
-    @RequestMapping("listByPage")
-    public PageInfo<T> listByPage(T entity) {
+    @RequestMapping("page")
+    public PageInfo<T> page(T entity) {
         return new PageInfo<>(baseService.select(entity));
-    }
-
-    @RequestMapping("listByIdsAndPage")
-    public PageInfo<T> listByPage(E[] ids) {
-        return new PageInfo<>(baseService.select(ids));
     }
 
     public String getModel() {

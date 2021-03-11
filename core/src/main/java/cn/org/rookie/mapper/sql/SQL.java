@@ -1,15 +1,12 @@
 package cn.org.rookie.mapper.sql;
 
 import cn.org.rookie.mapper.entity.*;
-import cn.org.rookie.mapper.sql.where.Condition;
-import cn.org.rookie.mapper.sql.where.Wrapper;
-import org.apache.ibatis.jdbc.SQL;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class SQLBuilder {
+public class SQL {
 
     private final TableInfo tableInfo;
     private final Class<?> type;
@@ -19,11 +16,11 @@ public class SQLBuilder {
     private final String SELECT;
     private String sql;
 
-    public SQLBuilder(Class<?> type) {
-        final SQL insert = new SQL();
-        final SQL delete = new SQL();
-        final SQL update = new SQL();
-        final SQL select = new SQL();
+    public SQL(Class<?> type) {
+        final org.apache.ibatis.jdbc.SQL insert = new org.apache.ibatis.jdbc.SQL();
+        final org.apache.ibatis.jdbc.SQL delete = new org.apache.ibatis.jdbc.SQL();
+        final org.apache.ibatis.jdbc.SQL update = new org.apache.ibatis.jdbc.SQL();
+        final org.apache.ibatis.jdbc.SQL select = new org.apache.ibatis.jdbc.SQL();
 
         this.tableInfo = new TableInfo(type);
         this.type = type;
@@ -45,19 +42,13 @@ public class SQLBuilder {
         select.SELECT(select(tableName, primaryColumnName, primaryFieldName));
 
         int size = columns.size();
-        for (int i = 0; i < size; i++) {
-            ColumnInfo columnInfo = columns.get(i);
+        for (ColumnInfo columnInfo : columns) {
             String columnName = columnInfo.getColumnName();
             String fieldName = columnInfo.getFieldName();
-            String separator = ",";
-            if (i == size - 1) {
-                separator = "";
-            }
+            value.append(ifScript(fieldName, columnName));
+            values.append(ifScript(fieldName, sharp(fieldName)));
 
-            value.append(ifScript(fieldName, columnName, separator));
-            values.append(ifScript(fieldName, sharp(fieldName), separator));
-
-            set.append(ifScript(fieldName, set(columnName, fieldName), separator));
+            set.append(ifScript(fieldName, set(columnName, fieldName)));
 
             select.SELECT(select(tableName, columnName, fieldName));
         }
@@ -82,37 +73,37 @@ public class SQLBuilder {
         this.SELECT = select.toString();
     }
 
-    public SQLBuilder insert() {
-        sql = INSERT;
-        return this;
-    }
-
-    public SQLBuilder delete() {
-        sql = DELETE;
-        return this;
-    }
-
-    public SQLBuilder update() {
-        sql = UPDATE;
-        return this;
-    }
-
-    public SQLBuilder select() {
-        sql = SELECT;
-        return this;
-    }
-
-    public SQLBuilder byPrimary() {
-        sql += (" WHERE " + condition(getTableName(), getPrimaryColumnName(), "id"));
-        return this;
-    }
-
-    private static String join(CharSequence delimiter, CharSequence prefix, CharSequence suffix, Collection<String> source) {
-        StringJoiner joiner = new StringJoiner(delimiter, prefix, suffix);
+    private static String join(Collection<String> source) {
+        StringJoiner joiner = new StringJoiner(",", " ORDER BY ", "");
         for (String s : source) {
             joiner.add(s);
         }
         return joiner.toString();
+    }
+
+    public SQL insert() {
+        sql = INSERT;
+        return this;
+    }
+
+    public SQL delete() {
+        sql = DELETE;
+        return this;
+    }
+
+    public SQL update() {
+        sql = UPDATE;
+        return this;
+    }
+
+    public SQL select() {
+        sql = SELECT;
+        return this;
+    }
+
+    public SQL byPrimary() {
+        sql += (" WHERE " + condition(getTableName(), getPrimaryColumnName(), "id"));
+        return this;
     }
 
     public Class<?> getType() {
@@ -156,11 +147,11 @@ public class SQLBuilder {
     }
 
     private String trimScript(String content) {
-        return String.format("<trim prefix=\"\" suffixOverrides=\",\">%s</trim>", content);
+        return String.format("<trim prefix=\"\" suffixOverrides=\"%s\">%s</trim>", ",", content);
     }
 
-    private String ifScript(String fieldName, String content, String separator) {
-        return String.format("<if test=\"%s != null\">%s%s</if>", fieldName, content, separator);
+    private String ifScript(String fieldName, String content) {
+        return String.format("<if test=\"%s != null\">%s</if>", fieldName, content);
     }
 
     private String condition(String tableName, String columnName, String fieldName) {
@@ -175,7 +166,7 @@ public class SQLBuilder {
         return "<script>" + sql + "</script>";
     }
 
-    public SQLBuilder where(Wrapper wrapper) {
+    public SQL where(Wrapper wrapper) {
         StringBuilder where = new StringBuilder();
         if (wrapper != null) {
             List<Condition> conditions = wrapper.getConditions();
@@ -200,7 +191,7 @@ public class SQLBuilder {
             }
 
             if (order.size() > 0) {
-                sql += join(",", " ORDER BY ", "", order);
+                sql += join(order);
             }
         }
         return this;

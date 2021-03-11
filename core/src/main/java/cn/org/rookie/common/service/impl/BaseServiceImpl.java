@@ -4,7 +4,7 @@ import cn.org.rookie.common.service.BaseService;
 import cn.org.rookie.entity.BaseEntity;
 import cn.org.rookie.mapper.BaseMapper;
 import cn.org.rookie.mapper.entity.PrimaryInfo;
-import cn.org.rookie.mapper.sql.where.Wrapper;
+import cn.org.rookie.mapper.sql.Wrapper;
 import cn.org.rookie.mapper.utils.SqlBuilderContext;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

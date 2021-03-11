@@ -1,10 +1,11 @@
 package cn.org.rookie.mapper;
 
-import cn.org.rookie.mapper.sql.where.Wrapper;
+import cn.org.rookie.mapper.sql.Wrapper;
 import cn.org.rookie.mapper.utils.SqlBuilderContext;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 public interface BaseMapper<T, E> {
@@ -40,32 +41,35 @@ public interface BaseMapper<T, E> {
 
 class BaseMapperProvider {
 
+    private static Class<?> getEntityType(ProviderContext context) {
+        return (Class<?>) ((ParameterizedType) (context.getMapperType().getGenericInterfaces()[0])).getActualTypeArguments()[0];
+    }
+
     public String insert(ProviderContext context) {
-        return SqlBuilderContext.getSqlBuilder(context).insert().build();
+        return SqlBuilderContext.getSqlBuilder(getEntityType(context)).insert().build();
     }
 
     public String deleteByPrimary(Object o, ProviderContext context) {
-        return SqlBuilderContext.getSqlBuilder(context).select().byPrimary().build();
+        return SqlBuilderContext.getSqlBuilder(getEntityType(context)).select().byPrimary().build();
     }
 
     public String delete(Wrapper wrapper, ProviderContext context) {
-        return SqlBuilderContext.getSqlBuilder(context).delete().where(wrapper).build();
+        return SqlBuilderContext.getSqlBuilder(getEntityType(context)).delete().where(wrapper).build();
     }
 
     public String updateByPrimary(Object o, ProviderContext context) {
-        return SqlBuilderContext.getSqlBuilder(context).update().byPrimary().build();
+        return SqlBuilderContext.getSqlBuilder(getEntityType(context)).update().byPrimary().build();
     }
 
     public String update(Object entity, Wrapper wrapper, ProviderContext context) {
-        return SqlBuilderContext.getSqlBuilder(context).update().where(wrapper).build();
+        return SqlBuilderContext.getSqlBuilder(getEntityType(context)).update().where(wrapper).build();
     }
 
     public String select(Wrapper wrapper, ProviderContext context) {
-        return SqlBuilderContext.getSqlBuilder(context).select().where(wrapper).build();
+        return SqlBuilderContext.getSqlBuilder(getEntityType(context)).select().where(wrapper).build();
     }
 
     public String selectByPrimary(Object o, ProviderContext context) {
-        return SqlBuilderContext.getSqlBuilder(context).select().byPrimary().build();
+        return SqlBuilderContext.getSqlBuilder(getEntityType(context)).select().byPrimary().build();
     }
-
 }

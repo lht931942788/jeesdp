@@ -29,7 +29,6 @@ public abstract class JsonUtils {
      * @return 转换后JSON字符串
      */
 
-
     public static String toJsonString(Object bean) {
         try {
             return mapper.writeValueAsString(bean);
@@ -48,7 +47,6 @@ public abstract class JsonUtils {
      * @return 转换后的对象
      */
 
-
     public static <T> T toObject(String json, Class<T> type) {
         try {
             return mapper.readValue(json, type);
@@ -64,7 +62,6 @@ public abstract class JsonUtils {
      * @param json 要转换的字符串
      * @return 返回JSON对象
      */
-
 
     public static JsonNode toJsonNode(String json) {
         try {
@@ -82,7 +79,6 @@ public abstract class JsonUtils {
      * @param bean 要转换的实体
      * @return 返回JSON对象
      */
-
 
     public static JsonNode toJsonNode(Object bean) {
         return mapper.valueToTree(bean);

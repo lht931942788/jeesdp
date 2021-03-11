@@ -2,28 +2,26 @@ package cn.org.rookie.mapper.utils;
 
 import cn.org.rookie.mapper.entity.PrimaryInfo;
 import cn.org.rookie.mapper.entity.TableInfo;
-import cn.org.rookie.mapper.sql.SQLBuilder;
-import org.apache.ibatis.builder.annotation.ProviderContext;
+import cn.org.rookie.mapper.sql.SQL;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SqlBuilderContext {
 
-    private static final Map<String, SQLBuilder> CONTEXT = new ConcurrentHashMap<>();
+    private static final Map<String, SQL> CONTEXT = new ConcurrentHashMap<>();
 
-    public static SQLBuilder getSqlBuilder(ProviderContext context) {
-        String name = getEntityType(context).getName();
-        SQLBuilder sqlBuilder = CONTEXT.get(name);
-        if (sqlBuilder == null) {
-            sqlBuilder = new SQLBuilder(getEntityType(context));
-            CONTEXT.put(name, sqlBuilder);
+    public static SQL getSqlBuilder(Class<?> entity) {
+        String name = entity.getName();
+        SQL sql = CONTEXT.get(name);
+        if (sql == null) {
+            sql = new SQL(entity);
+            CONTEXT.put(name, sql);
         }
-        return sqlBuilder;
+        return sql;
     }
 
-    public static SQLBuilder getSqlBuilder(String name) {
+    public static SQL getSqlBuilder(String name) {
         return CONTEXT.get(name);
     }
 
@@ -35,7 +33,4 @@ public class SqlBuilderContext {
         return CONTEXT.get(name).getPrimaryInfo();
     }
 
-    private static Class<?> getEntityType(ProviderContext context) {
-        return (Class<?>) ((ParameterizedType) (context.getMapperType().getGenericInterfaces()[0])).getActualTypeArguments()[0];
-    }
 }

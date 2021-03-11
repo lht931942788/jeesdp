@@ -1,7 +1,7 @@
 package cn.org.rookie.common.service;
 
 import cn.org.rookie.entity.BaseEntity;
-import cn.org.rookie.mapper.sql.where.Wrapper;
+import cn.org.rookie.mapper.sql.Wrapper;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContextAware;
 
