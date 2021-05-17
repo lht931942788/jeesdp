@@ -1,5 +1,6 @@
 package cn.org.rookie.jeesdp.utils;
 
+import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
 
@@ -30,11 +31,18 @@ public abstract class ScriptUtils {
         return null;
     }
 
+    public static Object exec(String script, Binding binding) {
+        GroovyShell shell = new GroovyShell(binding);
+        return shell.evaluate(script);
+    }
+
     public static void main(String[] args) throws IOException {
-        GroovyShell shell = new GroovyShell();
-        shell.setVariable("demo", 1);
-        shell.setVariable("demo", 3);
-        shell.evaluate("print(`{demo}` + 1)");
+        Binding binding = new Binding();
+        binding.setProperty("demo", 2);
+        System.out.println(exec("import java.util.Random;\n" +
+                        "Random random = new Random();\n",
+                binding));
+        System.out.println(binding.getVariables());
     }
 
 }
