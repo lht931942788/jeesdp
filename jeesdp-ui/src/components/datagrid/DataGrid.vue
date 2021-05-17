@@ -1,29 +1,44 @@
 <template>
-  <el-table v-loading="loading" :data="data" :height="height" :row-key="rowKey" border
+  <el-table v-loading="loading" :data="data" :height="height" :row-key="rowKey"
+            border highlight-current-row
             element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"
-            tooltip-effect="dark" @selection-change="selectionChange" @row-dblclick="rowDblclick">
+            tooltip-effect="dark" @selection-change="onSelectionChange" @row-dblclick="onRowDblclick">
 
     <el-table-column v-if="selection" align="center" fixed header-align="center" type="selection"/>
-    <el-table-column v-if="index" :index="indexMethod" align="center" fixed header-align="center" label="序号"
+
+    <el-table-column v-if="index" :index="indexMake" align="center" fixed header-align="center" label="序号"
                      type="index"/>
 
     <template v-for="field in fields">
-      <template v-if="field.fieldType !== 'hidden'">
-        <el-table-column :align="field.align ? field.align : 'center'" :fixed="field.fixed"
-                         :header-align="field.headerAlign ? field.headerAlign : 'center'"
-                         :label="field.label" :prop="field.prop" :show-overflow-tooltip="true"
-                         :width="field.width ? field.width : 150">
 
-          <template v-if="'select,radio,checkbox'.indexOf(field.type) > -1 && field.dict" #default="scope">
-            {{ translateDict(options[field.dict ? field.dict : field.prop], scope.row[field.prop]) }}
-          </template>
+      <el-table-column v-if="field.type !== 'hidden' && field.type === 'expand'" align="center" header-align="center"
+                       type="expand">
 
-          <template v-else-if="field.slot" #default="scope">
-            <slot :name="field.slot" :row="scope.row"/>
-          </template>
+        <template #default="scope">
+          <slot :name="field.slot" :row="scope.row"/>
+        </template>
 
-        </el-table-column>
-      </template>
+      </el-table-column>
+
+      <el-table-column v-else-if="field.type !== 'hidden'" :align="field.align ? field.align : 'center'"
+                       :fixed="field.fixed" :header-align="field.headerAlign ? field.headerAlign : 'center'"
+                       :label="field.label" :prop="field.prop"
+                       :width="field.width ? field.width : ''"
+                       show-overflow-tooltip>
+
+        <template v-if="'select,radio,checkbox'.indexOf(field.type) > -1 && field.dict" #default="scope">
+          {{ translateDict(options[field.dict ? field.dict : field.prop], scope.row[field.prop]) }}
+        </template>
+
+        <template v-if="'timePicker,datePicker'.indexOf(field.type) > -1" #default="scope">
+          {{ $dayjs(scope.row[field.prop]).format(field.format) }}
+        </template>
+
+        <template v-if="field.slot" #default="scope">
+          <slot :field="field" :name="field.slot" :row="scope.row"/>
+        </template>
+
+      </el-table-column>
     </template>
   </el-table>
 
@@ -91,13 +106,13 @@ export default {
         return row[this.rowKey];
       });
     },
-    selectionChange(selection) {
+    onSelectionChange(selection) {
       this.selectedRows = selection;
     },
-    rowDblclick(row, column, event) {
+    onRowDblclick(row, column, event) {
       this.$emit('rowDblclick', row, column, event)
     },
-    indexMethod(index) {
+    indexMake(index) {
       if (this.pageable) {
         return (this.page.pageNum - 1) * this.page.pageSize + index + 1;
       }

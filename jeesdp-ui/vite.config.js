@@ -1,7 +1,5 @@
-import vuePlugin from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
-
-const path = require("path");
+import vue from "@vitejs/plugin-vue";
+import path from "path";
 
 export default ({command, mode}) => {
     return {
@@ -12,15 +10,17 @@ export default ({command, mode}) => {
             }
         },
         build: {
-            manifest: true
+            manifest: true,
+            rollupOptions: {
+                plugins: []
+            },
         },
         /*define: {
-            BASE_URL: mode === "production" ? "http://localhost:8080" : "http://localhost:8090",
+            BASE_URL: 'ss',
         },*/
         open: true,
         plugins: [
-            vuePlugin(),
-            vueJsx(),
+            vue(),
         ],
         server: {
             port: 80,

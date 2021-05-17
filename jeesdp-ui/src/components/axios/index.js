@@ -26,6 +26,7 @@ instance.interceptors.request.use(config => {
 });
 
 instance.interceptors.response.use(response => {
+    console.log(response)
     return response.data;
 }, error => {
     if (error.response) {
@@ -41,6 +42,7 @@ instance.interceptors.response.use(response => {
         }
     } else {
         notify.error({message: '服务器异常'});
+        return Promise.reject(error);
     }
 });
 

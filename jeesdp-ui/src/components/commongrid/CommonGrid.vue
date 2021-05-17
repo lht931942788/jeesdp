@@ -2,13 +2,16 @@
   <el-container>
     <el-header style="height: auto">
       <el-row>
-        <el-form v-if="searchable" ref="search" v-model="params" inline label-position="left">
+        <el-form v-if="searchable" ref="search" v-model="params" inline label-position="left" label-suffix="：">
           <el-col :span="24">
             <template v-for="field in fields">
-              <form-item v-if="field.searchable" v-model:value="params[field.prop]" :field="field"
-                         :options="options[field.dict ? field.dict : field.prop]" :validate="false"/>
+              <form-item
+                  v-if="field.searchable && field.type !== 'operation' && field.type !== 'index' && field.type !== 'expand'"
+                  v-model:value="params[field.prop]" :field="field"
+                  :options="options[field.dict ? field.dict : field.prop]"
+                  :validate="false"/>
             </template>
-            <slot name="search"></slot>
+            <slot :params="params" name="search"></slot>
             <el-form-item>
               <el-button-group>
                 <el-button :title="'查询'" type="primary" @click="onSearch">查询</el-button>
@@ -39,16 +42,18 @@
   </el-container>
 
   <el-dialog v-model="dialogVisible" :title="title" :width="width" @closed="closed">
-    <el-form ref="form" :model="model" label-position="right" label-width="120px">
+    <el-form ref="form" :model="model" label-position="right" label-suffix="：" label-width="120px">
       <template v-for="field in fields">
-        <form-item v-if="field.type !== 'operation'" v-model:value="model[field.prop]" :field="field"
-                   :options="options[field.dict ? field.dict : field.prop]" :preview="preview"/>
+        <form-item v-if="field.type !== 'operation' && field.type !== 'index' && field.type !== 'expand'"
+                   v-model:value="model[field.prop]" :field="field"
+                   :options="options[field.dict ? field.dict : field.prop]"/>
       </template>
+      <slot :model="model" name="form"/>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button v-if="!preview" :loading="loading" title="确定" type="primary" @click="onSave">确定</el-button>
-        <el-button title="取消" @click="close">取消</el-button>
+        <el-button title="取消" @click="onClose">取消</el-button>
       </span>
     </template>
   </el-dialog>
@@ -135,6 +140,8 @@ export default {
           }).catch(err => {
             this.loading = false;
           })
+        } else {
+          this.$notify({message: '请填写必填项！', type: 'error'});
         }
       });
     },
@@ -166,6 +173,9 @@ export default {
       this.preview = true;
       this.open('查看');
     },
+    onClose() {
+      this.close();
+    },
     load(params = {}) {
       this.tableLoading = true;
       if (this.pageable) {
@@ -180,17 +190,17 @@ export default {
         this.tableLoading = false;
       })
     },
-    save(data) {
-      return this.$axios.post('', data);
-    },
-    remove(ids) {
-      return this.$axios.post('', {ids: ids,});
-    },
     get(id) {
       return this.$axios.post('', {id: id,});
     },
+    save(data) {
+      return this.$axios.post('', data);
+    },
     list(params) {
       return this.$axios.post('', params);
+    },
+    remove(ids) {
+      return this.$axios.post('', {ids: ids,});
     },
     open(title) {
       this.title = title;
@@ -200,9 +210,11 @@ export default {
       this.dialogVisible = false;
     },
     closed() {
-      this.preview = false;
-      this.$refs.form.resetFields();
-      this.model = {};
+      if (this.preview) {
+        this.preview = false;
+      } else {
+        this.$refs.form.resetFields();
+      }
     },
     setData(data) {
       this.data = data;

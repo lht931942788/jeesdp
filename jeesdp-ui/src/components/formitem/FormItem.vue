@@ -1,25 +1,14 @@
 <template>
   <el-form-item
       v-if="field.type"
-      :label="field.label + '：'"
+      :label="field.label"
       :label-width="field.labelWidth"
       :prop="field.prop"
-      :rules="validate && !preview ? field.rules : undefined"
+      :rules="validate ? field.rules : undefined"
   >
-    <template v-if="preview && model && field.type !== 'editor' && Array.isArray(model)">
-      <template v-if="field.options && field.options.type && field.options.type.indexOf('range') > -1">
-        <div>{{ model[0] + ' - ' + model[1] }}</div>
-      </template>
-      <template v-else>
-        <div>{{ model.join(',') }}</div>
-      </template>
-    </template>
-    <template v-if="preview && model && !Array.isArray(model)">
-      <div>{{ model }}</div>
-    </template>
 
     <el-radio-group
-        v-if="field.type === 'radio' && !preview"
+        v-if="field.type === 'radio'"
         v-model="model"
     >
       <el-radio
@@ -33,7 +22,7 @@
     </el-radio-group>
 
     <el-checkbox-group
-        v-if="field.type === 'checkbox' && !preview"
+        v-if="field.type === 'checkbox'"
         v-model="model"
     >
       <el-checkbox
@@ -47,7 +36,7 @@
     </el-checkbox-group>
 
     <el-input
-        v-if="field.type === 'input' && !preview"
+        v-if="field.type === 'input'"
         v-model="model"
         :disabled="field.disabled"
         :placeholder="field.placeholder" :type="field.options.type"
@@ -55,24 +44,25 @@
     />
 
     <el-time-picker
-        v-if="field.type === 'timePicker' && !preview"
+        v-if="field.type === 'time'"
         v-model="model"
         :disabled="field.disabled"
         :placeholder="field.placeholder"
+        :is-range="field.isRange"
         clearable
     />
 
     <el-date-picker
-        v-if="field.type === 'datePicker' && !preview"
+        v-if="field.type.indexOf('date') > -1"
         v-model="model"
         :disabled="field.disabled"
         :placeholder="field.placeholder"
-        :type="field.options.type"
+        :type="field.type"
         clearable
     />
 
     <el-switch
-        v-if="field.type === 'switch' && !preview"
+        v-if="field.type === 'switch'"
         v-model="model"
         :clearable="true"
         :disabled="field.disabled"
@@ -80,7 +70,7 @@
     />
 
     <el-cascader
-        v-if="field.type === 'cascader' && !preview"
+        v-if="field.type === 'cascader'"
         v-model="model"
         :disabled="field.disabled"
         :options="options"
@@ -89,10 +79,11 @@
         filterable
     />
 
-    <el-select v-if="field.type === 'select' && !preview"
+    <el-select v-if="field.type === 'select'"
                v-model="model"
                :disabled="field.disabled"
                :placeholder="field.placeholder"
+               :multiple="field.multiple"
                clearable
                filterable
     >
@@ -104,7 +95,7 @@
       />
     </el-select>
 
-    <wang-editor v-if="field.type === 'editor' && !preview" v-model:value="value"/>
+    <wang-editor v-if="field.type === 'editor'" v-model:value="value"/>
   </el-form-item>
 
 </template>
@@ -122,10 +113,6 @@ export default {
       type: Object,
       required: true,
     },
-    preview: {
-      type: Boolean,
-      default: false,
-    },
     validate: {
       type: Boolean,
       default: true,
@@ -142,21 +129,43 @@ export default {
     }
   },
   created() {
-    this.model = this.value;
+    if (this.value) {
+      if ('range'.indexOf(this.field.type) > -1) {
+        this.model = this.value.split(' - ')
+      } else if (('select'.indexOf(this.field.type) > -1 && this.field.multiple) || 'checkbox'.indexOf(this.field.type) > -1) {
+        this.model = this.value.split(',')
+      } else {
+        this.model = this.value;
+      }
+    }
   },
   watch: {
     model: {
       handler(newValue, oldValue) {
         let value = newValue;
-        if (newValue && (this.field.type === 'datePicker' || this.field.type === 'timePicker')) {
-          value = dayjs(newValue).format("YYYY-MM-DD HH:mm:ss");
+        if (newValue && ('date'.indexOf(this.field.type) > -1 || this.field.type === 'time')) {
+          if ('range'.indexOf(this.field.type) > -1) {
+            value[0] = dayjs(newValue[0]).format('YYYY-MM-DD HH:mm:ss');
+            value[1] = dayjs(newValue[0]).format('YYYY-MM-DD HH:mm:ss');
+            value = value.join(" - ");
+          } else {
+            value = dayjs(newValue).format('YYYY-MM-DD HH:mm:ss');
+          }
+        } else if (('select'.indexOf(this.field.type) > -1 && this.field.multiple) || 'checkbox'.indexOf(this.field.type) > -1) {
+          value = newValue.join(',');
         }
         this.$emit('update:value', value);
       }
     },
     value: {
       handler(newValue, oldValue) {
-        this.model = newValue;
+        if ('range'.indexOf(this.field.type) > -1) {
+          this.model = newValue.split(' - ')
+        } else if (('select'.indexOf(this.field.type) > -1 && this.field.multiple) || 'checkbox'.indexOf(this.field.type) > -1) {
+          this.model = this.value.split(',')
+        } else {
+          this.model = newValue;
+        }
       }
     },
   },

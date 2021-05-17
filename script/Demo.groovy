@@ -1,5 +1,5 @@
-import cn.org.rookie.mapper.annotation.Column
-import cn.org.rookie.mapper.annotation.Table
+import cn.org.rookie.jeesdp.mapper.annotation.Column
+import cn.org.rookie.jeesdp.mapper.annotation.Table
 
 @Table("demo")
 class Demo {

@@ -6,11 +6,16 @@
         <aside-menu :menus="menus"/>
       </el-aside>
       <el-container>
-        <el-main class="jeesdp-content">
+        <el-main class="jeesdp-content"
+                 style="border: 1px solid #EBEEF5; box-sizing:border-box; padding: 0; height: calc(100% - 60px)">
+          <div
+              style="height: 60px; line-height: 60px; font-weight: bold; padding-left: 20px; border: 1px solid #EBEEF5; box-sizing:border-box;">
+            {{ 模型管理 }}
+          </div>
           <router-view/>
           <el-backtop :visibility-height="0" target=".jeesdp-content"/>
         </el-main>
-        <el-footer>Footer</el-footer>
+        <el-footer style="height: 38px; line-height: 38px; text-align: center">Footer</el-footer>
       </el-container>
     </el-container>
   </el-container>
@@ -53,5 +58,6 @@ export default {
   height: 100%;
   width: 100%;
   margin: 0;
+  overflow: hidden;
 }
 </style>
