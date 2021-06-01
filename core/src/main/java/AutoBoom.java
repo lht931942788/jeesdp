@@ -7,6 +7,7 @@ public class AutoBoom {
         Robot robot = new Robot();
         //使用这个程序必须先将轰炸的内容复制好然后打开聊天框
         //所以预留5秒做准备
+        
         System.out.println("复制好内容打开聊天框五秒后进行轰炸");
         for (int i = 5; i > 0; i--) {
             System.out.println(i + "秒");

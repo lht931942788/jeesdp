@@ -9,38 +9,40 @@ import java.util.Date;
  */
 
 public abstract class DateUtils {
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final SimpleDateFormat HH_MM_SS = new SimpleDateFormat("HH:mm:ss");
+    public static final SimpleDateFormat YYYY_MM_DD = new SimpleDateFormat("yyyy-MM-dd");
+    public static final SimpleDateFormat YYYY_MM_DD_HH_MM_SS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static String now() {
-        return SDF.format(new Date());
+        return YYYY_MM_DD_HH_MM_SS.format(new Date());
     }
 
     public static String now(String patten) {
-        SDF.applyPattern(patten);
-        return SDF.format(new Date());
+        YYYY_MM_DD_HH_MM_SS.applyPattern(patten);
+        return YYYY_MM_DD_HH_MM_SS.format(new Date());
     }
 
     public static String format(Date date) {
-        return SDF.format(new Date());
+        return YYYY_MM_DD_HH_MM_SS.format(new Date());
     }
 
     public static String format(long date) {
-        return SDF.format(new Date());
+        return YYYY_MM_DD_HH_MM_SS.format(new Date());
     }
 
     public static String format(Date date, String patten) {
-        SDF.applyPattern(patten);
-        return SDF.format(date);
+        YYYY_MM_DD_HH_MM_SS.applyPattern(patten);
+        return YYYY_MM_DD_HH_MM_SS.format(date);
     }
 
     public static String format(long date, String patten) {
-        SDF.applyPattern(patten);
-        return SDF.format(date);
+        YYYY_MM_DD_HH_MM_SS.applyPattern(patten);
+        return YYYY_MM_DD_HH_MM_SS.format(date);
     }
 
     public static Date parse(String date) {
         try {
-            return SDF.parse(date);
+            return YYYY_MM_DD_HH_MM_SS.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -49,8 +51,8 @@ public abstract class DateUtils {
 
     public static Date parse(String date, String patten) {
         try {
-            SDF.applyPattern(patten);
-            return SDF.parse(date);
+            YYYY_MM_DD_HH_MM_SS.applyPattern(patten);
+            return YYYY_MM_DD_HH_MM_SS.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }

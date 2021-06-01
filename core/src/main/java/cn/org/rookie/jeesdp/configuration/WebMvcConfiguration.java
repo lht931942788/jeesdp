@@ -1,6 +1,5 @@
 package cn.org.rookie.jeesdp.configuration;
 
-import cn.org.rookie.jeesdp.interceptor.ArgumentResolver;
 import cn.org.rookie.jeesdp.interceptor.PageInterceptor;
 import cn.org.rookie.jeesdp.interceptor.PermissionInterceptor;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +21,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new ArgumentResolver());
+        //resolvers.add(new ArgumentResolver());
     }
 
     @Override

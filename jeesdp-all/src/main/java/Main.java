@@ -25,6 +25,7 @@ public class Main {
              */
             public void onFileCreate(File file) {
                 System.out.println("[新建]:" + file.getAbsolutePath());
+
             }
 
             /**

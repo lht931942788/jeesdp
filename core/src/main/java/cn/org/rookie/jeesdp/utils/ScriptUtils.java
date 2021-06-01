@@ -37,12 +37,8 @@ public abstract class ScriptUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        Binding binding = new Binding();
-        binding.setProperty("demo", 2);
-        System.out.println(exec("import java.util.Random;\n" +
-                        "Random random = new Random();\n",
-                binding));
-        System.out.println(binding.getVariables());
+        GroovyShell shell = new GroovyShell();
+        System.out.println(shell.evaluate(new File("C:\\Users\\admin\\IdeaProjects\\jeesdp\\core\\src\\main\\resources\\demo.groovy")));
     }
 
 }
