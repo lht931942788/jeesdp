@@ -8,10 +8,6 @@
       <el-container>
         <el-main class="jeesdp-content"
                  style="border: 1px solid #EBEEF5; box-sizing:border-box; padding: 0; height: calc(100% - 60px)">
-          <div
-              style="height: 60px; line-height: 60px; font-weight: bold; padding-left: 20px; border: 1px solid #EBEEF5; box-sizing:border-box;">
-            {{ 模型管理 }}
-          </div>
           <router-view/>
           <el-backtop :visibility-height="0" target=".jeesdp-content"/>
         </el-main>

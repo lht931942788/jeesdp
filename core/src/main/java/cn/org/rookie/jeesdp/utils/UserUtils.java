@@ -1,14 +1,17 @@
 package cn.org.rookie.jeesdp.utils;
 
-/*import org.springframework.security.core.Authentication;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;*/
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+
+import java.util.LinkedHashMap;
+import java.util.Set;
 
 @SuppressWarnings("ALL")
 public abstract class UserUtils {
 
-    /*public static User getUser() {
+    public static User getUser() {
         OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
         Authentication userAuthentication = oAuth2Authentication.getUserAuthentication();
         Object principal = userAuthentication.getPrincipal();
@@ -20,9 +23,9 @@ public abstract class UserUtils {
             ReflectUtils.populate(details, User.class);
         }
         return user;
-    }*/
+    }
 
-/*    public static Set<String> getUserPermissions() {
+    public static Set<String> getUserPermissions() {
         return getUser().getPermissions();
     }
 
@@ -32,6 +35,6 @@ public abstract class UserUtils {
 
     public static String getUserId() {
         return getUser().getId();
-    }*/
+    }
 
 }

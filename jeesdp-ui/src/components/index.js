@@ -1,6 +1,6 @@
 import "element-plus/lib/theme-chalk/index.css";
 import "../assets/css/jeesdp.css";
-import "font-awesome/css/font-awesome.css"
+import "font-awesome/css/font-awesome.css";
 
 import cookie from "js-cookie";
 import axios from "./axios";
@@ -14,8 +14,6 @@ import FormItem from "./formitem";
 import CommonGrid from "./commongrid";
 import AsideMenu from "./asidemenu";
 import JsonEditor from "./jsoneditor";
-import WangEditor from "./wangeditor";
-import MonacoEditor from "./monacoeditor";
 
 export default {
     install: (app, options) => {
@@ -38,8 +36,6 @@ export default {
         app.config.globalProperties.$utils = utils;
         app.config.globalProperties.user = {};
         app.component(JsonEditor.name, JsonEditor);
-        app.component(MonacoEditor.name, MonacoEditor);
-        app.component(WangEditor.name, WangEditor);
         app.component(DataGrid.name, DataGrid);
         app.component(FormItem.name, FormItem);
         app.component(CommonGrid.name, CommonGrid);

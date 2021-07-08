@@ -24,7 +24,7 @@ export default ({command, mode}) => {
         ],
         server: {
             port: 80,
-        }
+        },
         /*proxy: {
             "/api": {
                 target: "https://blog.csdn.net/weixin_45292658",

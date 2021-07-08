@@ -1,0 +1,29 @@
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(239, 239, 239);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #bfbfbf;
+    border-radius: 10px;
+}
+
+html, body, #app {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+html, body, #app {
+    overflow: hidden;
+}
+
+.el-dialog__body {
+    height: 500px;
+    overflow: auto;
+}
