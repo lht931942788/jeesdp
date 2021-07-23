@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.org.rookie</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>jeesdp-core</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
